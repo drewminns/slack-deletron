@@ -1,17 +1,9 @@
-import { Controller, Get, Middleware } from '@overnightjs/core';
+import { Controller, Get } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
+import axios, { AxiosPromise, AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
-import request, { ResponseRequest } from 'request';
 import url from 'url';
-
-interface IResponseBody {
-  ok: boolean;
-  access_token: string;
-  scope: string;
-  user_id: string;
-  team_name: string;
-  team_id: string;
-}
+import { IResponseBody, IUser } from '../interfaces';
 
 @Controller('auth/slack')
 export class SlackAuthController {
@@ -23,7 +15,7 @@ export class SlackAuthController {
     private SCOPE: string,
     private CLIENT_SECRET: string,
     private REDIRECT_URI: string,
-    private SLACK_OAUTH_URI: string
+    private SLACK_OAUTH_URI: string,
   ) {
     this.REDIRECT_URL = this.generateRedirectURI();
   }
@@ -31,7 +23,7 @@ export class SlackAuthController {
   private generateRedirectURI(): string {
     return url.format({
       pathname: this.PATH_URI,
-      query: { client_id: this.CLIENT_ID, scope: this.SCOPE }
+      query: { client_id: this.CLIENT_ID, scope: this.SCOPE },
     });
   }
 
@@ -42,19 +34,19 @@ export class SlackAuthController {
         client_id: this.CLIENT_ID,
         client_secret: this.CLIENT_SECRET,
         code,
-        redirect_uri: this.REDIRECT_URI
-      }
+        redirect_uri: this.REDIRECT_URI,
+      },
     });
   }
 
-  private fetchUserProfile(): void {
-    // To Do. Fetch User Profile
-    // .get('https://slack.com/api/users.info', {
-    //     params: {
-    //       token,
-    //       user,
-    //     },
-    //   })
+  private fetchUserProfile(token: string, user: string): Promise<AxiosPromise> {
+    Logger.Info('Fetching users.info');
+    return axios.get('https://slack.com/api/users.info', {
+      params: {
+        token,
+        user,
+      },
+    });
   }
 
   @Get('')
@@ -63,23 +55,42 @@ export class SlackAuthController {
   }
 
   @Get('redirect')
-  private handleSlackRedirect(req: Request, res: Response): void {
+  private async handleSlackRedirect(req: Request, res: Response): Promise<any> {
     const uri: string = this.generateSlackOAuthURI(req.query.code);
-
     try {
-      request(
-        { uri, method: 'GET' },
-        (error, response, body: string): void => {
-          const JSONRes: IResponseBody = JSON.parse(body);
-          if (!JSONRes.ok) {
-            res.status(200).json({ error: JSON.stringify(JSONRes) });
+      await axios.get(uri).then(
+        async (response: AxiosResponse): Promise<any> => {
+          const bodyResponse = response.data as IResponseBody;
+          if (!bodyResponse.ok) {
+            // * To do - add in route to handle error */
+            Logger.Warn(`OAuth returned error. Error: ${bodyResponse.error}`);
+            res.status(401).send({ error: bodyResponse.error });
             return;
           } else {
-            res.json(JSONRes);
+            try {
+              const profile: AxiosResponse<IUser> = await this.fetchUserProfile(
+                bodyResponse.access_token,
+                bodyResponse.user_id,
+              );
+              if (!profile.data.ok) {
+                Logger.Warn(
+                  `User profile data returned with an error. METHOD: users.info, Error: ${
+                    profile.data.error
+                  }`,
+                );
+                res.status(401).send({ error: profile.data.error });
+              }
+
+              res.json({ ...bodyResponse, ...profile.data.user });
+            } catch (err) {
+              Logger.Warn('Fetching data from users.info');
+              res.status(401).send({ error: err });
+            }
           }
-        }
+        },
       );
     } catch (err) {
+      Logger.Warn('Slack Auth Redirect failed miserably');
       res.status(200).json({ error: err });
     }
   }
