@@ -1,15 +1,17 @@
 import * as dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
-let path;
+let pathURI;
 switch (process.env.NODE_ENV) {
   case 'test':
-    path = `${__dirname}/../../.env.test`;
+    pathURI = path.join(__dirname, '..', '..', '..', '.env.test');
     break;
   default:
-    path = `${__dirname}/../../.env.development`;
+    pathURI = path.join(__dirname, '..', '..', '..', '.env.development');
 }
-dotenv.config({ path });
+
+dotenv.config({ path: pathURI });
 
 export const CLIENT_ID = process.env.CLIENT_ID;
 export const CLIENT_SECRET = process.env.CLIENT_SECRET;

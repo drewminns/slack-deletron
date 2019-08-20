@@ -15,7 +15,7 @@ export class SlackAuthController {
     private SCOPE: string,
     private CLIENT_SECRET: string,
     private REDIRECT_URI: string,
-    private SLACK_OAUTH_URI: string,
+    private SLACK_OAUTH_URI: string
   ) {
     this.REDIRECT_URL = this.generateRedirectURI();
   }
@@ -23,7 +23,7 @@ export class SlackAuthController {
   private generateRedirectURI(): string {
     return url.format({
       pathname: this.PATH_URI,
-      query: { client_id: this.CLIENT_ID, scope: this.SCOPE },
+      query: { client_id: this.CLIENT_ID, scope: this.SCOPE }
     });
   }
 
@@ -34,8 +34,8 @@ export class SlackAuthController {
         client_id: this.CLIENT_ID,
         client_secret: this.CLIENT_SECRET,
         code,
-        redirect_uri: this.REDIRECT_URI,
-      },
+        redirect_uri: this.REDIRECT_URI
+      }
     });
   }
 
@@ -44,8 +44,8 @@ export class SlackAuthController {
     return axios.get('https://slack.com/api/users.info', {
       params: {
         token,
-        user,
-      },
+        user
+      }
     });
   }
 
@@ -70,13 +70,13 @@ export class SlackAuthController {
             try {
               const profile: AxiosResponse<IUser> = await this.fetchUserProfile(
                 bodyResponse.access_token,
-                bodyResponse.user_id,
+                bodyResponse.user_id
               );
               if (!profile.data.ok) {
                 Logger.Warn(
                   `User profile data returned with an error. METHOD: users.info, Error: ${
                     profile.data.error
-                  }`,
+                  }`
                 );
                 res.status(401).send({ error: profile.data.error });
               }
@@ -87,7 +87,7 @@ export class SlackAuthController {
               res.status(401).send({ error: err });
             }
           }
-        },
+        }
       );
     } catch (err) {
       Logger.Warn('Slack Auth Redirect failed miserably');

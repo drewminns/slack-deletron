@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/server" /* Redirect output structure to the directory. */,
+    "rootDir": "./src/server"
+  },
+  "exclude": ["src/app", "src/public"]
+}
