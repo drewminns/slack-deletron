@@ -2,15 +2,16 @@
   "name": "slackdeletron-api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/server/index.js",
   "scripts": {
     "clean": "rimraf dist/*",
     "lint:server": "tslint -c tslint.json -p tsconfig.server.json --fix",
     "tsc:server": "tsc --p tsconfig.server.json",
+    "build:client": "webpack --mode production",
     "dev:server": "ts-node-dev --respawn --transpileOnly ./src/server/index.ts",
     "dev:client": "webpack-dev-server --mode development --devtool inline-source-map --hot --open",
     "dev": "run-p dev:server dev:client",
-    "build": "npm-run-all clean lint:server tsc:server",
+    "build": "npm-run-all clean lint:server tsc:server build:client",
     "start": "node dist/server/index.js"
   },
   "keywords": [],

@@ -1,15 +1,13 @@
 import * as React from 'react';
 
-// tslint:disable-next-line: interface-name
-export interface HelloProps {
+export interface IHelloProps {
   compiler: string;
   framework: string;
 }
 
 // 'HelloProps' describes the shape of props.
 // State is never set so we use the '{}' type.
-export class Hello extends React.Component<HelloProps, {}> {
-  // tslint:disable-next-line: member-access
+export class Hello extends React.Component<IHelloProps, {}> {
   render() {
     return (
       <h1>

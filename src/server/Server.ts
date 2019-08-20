@@ -24,7 +24,7 @@ export class AppServer extends Server {
     this.setupControllers();
   }
 
-  public start(port: number): void {
+  start(port: number): void {
     this.app.listen(port, () => {
       Logger.Imp(`${this.SERVER_STARTED} ${port}`);
     });
