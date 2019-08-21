@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1566404504799" clover="3.2.0">
-  <project timestamp="1566404504799" name="All files">
+<coverage generated="1566408470329" clover="3.2.0">
+  <project timestamp="1566408470329" name="All files">
     <metrics statements="94" coveredstatements="20" conditionals="8" coveredconditionals="2" methods="19" coveredmethods="5" elements="121" coveredelements="27" complexity="0" loc="94" ncloc="94" packages="4" files="7" classes="7"/>
     <package name="client">
       <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -17,10 +17,10 @@
       <file name="Hello.tsx" path="/Users/drewminns/workspace/_internal_/slack-deletron/src/client/components/Hello.tsx">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
-        <line num="10" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
         <line num="12" count="1" type="stmt"/>
-        <line num="18" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
       </file>
     </package>
     <package name="server">
