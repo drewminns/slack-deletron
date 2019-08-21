@@ -4,17 +4,10 @@ import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import { SlackAuthController } from './controllers/SlackAuth';
 
-import {
-  CLIENT_ID,
-  CLIENT_SECRET,
-  PATH_URI,
-  REDIRECT_URI,
-  SCOPE,
-  SLACK_OAUTH_URI
-} from './utils/config';
+import { CLIENT_ID, CLIENT_SECRET, PATH_URI, REDIRECT_URI, SCOPE, SLACK_OAUTH_URI } from './utils/config';
 
 export class AppServer extends Server {
-  private SERVER_STARTED: string = 'Example server started on port: ';
+  private SERVER_STARTED = 'Example server started on port: ';
 
   constructor() {
     super(true);
@@ -37,7 +30,7 @@ export class AppServer extends Server {
       SCOPE as string,
       CLIENT_SECRET as string,
       REDIRECT_URI as string,
-      SLACK_OAUTH_URI as string
+      SLACK_OAUTH_URI as string,
     );
     super.addControllers([exampleController]);
   }
