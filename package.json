@@ -6,6 +6,7 @@
   "scripts": {
     "test:watch": "NODE_ENV=test jest --watch",
     "test": "NODE_ENV=test jest",
+    "test:coverage": "jest --coverage",
     "clean": "rimraf dist/*",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "tsc:server": "tsc --p tsconfig.server.json",
