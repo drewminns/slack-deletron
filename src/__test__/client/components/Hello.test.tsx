@@ -1,10 +1,17 @@
 import * as React from 'react';
-import { shallow } from 'enzyme';
 import { Hello } from '../../../client/components/Hello';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 
-test('Hello mounts properly', () => {
-  const hello = shallow(<Hello compiler="typescript" framework="React" />);
+describe('components/Hello', () => {
+  const MOCK = { compiler: 'TypeScript', framework: 'React' };
+  it('Hello mounts properly', () => {
+    const { container } = render(<Hello compiler={MOCK.compiler} framework={MOCK.framework} />);
+    expect(container).toMatchSnapshot();
+  });
 
-  expect(hello.find('h1').text()).toEqual('Hello from typescript and React!');
-  expect(hello).toMatchSnapshot();
+  it('Hello mounts properly', () => {
+    const { getByTestId } = render(<Hello compiler={MOCK.compiler} framework={MOCK.framework} />);
+    expect(getByTestId('string-data')).toHaveTextContent(`Hello from ${MOCK.compiler} and ${MOCK.framework}!`);
+  });
 });

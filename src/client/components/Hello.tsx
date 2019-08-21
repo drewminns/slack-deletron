@@ -1,6 +1,5 @@
 import * as React from 'react';
-import Axios from 'axios';
-
+import { TestInput } from './TestInput';
 export interface IHelloProps {
   compiler: string;
   framework: string;
@@ -11,9 +10,12 @@ export interface IHelloProps {
 export class Hello extends React.Component<IHelloProps, {}> {
   render() {
     return (
-      <h1>
-        Hello from {this.props.compiler} and {this.props.framework}!
-      </h1>
+      <div>
+        <h1 data-testid="string-data">
+          Hello from {this.props.compiler} and {this.props.framework}!
+        </h1>
+        <TestInput />
+      </div>
     );
   }
 }
