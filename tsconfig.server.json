@@ -6,5 +6,5 @@
     "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
     "emitDecoratorMetadata": true
   },
-  "exclude": ["src/client", "src/public"]
+  "exclude": ["src/client", "src/public", "src/__test__"]
 }

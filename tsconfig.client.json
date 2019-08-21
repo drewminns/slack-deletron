@@ -8,5 +8,5 @@
     "target": "es6",
     "jsx": "react"
   },
-  "exclude": ["src/server", "src/public"]
+  "exclude": ["src/server", "src/public", "src/__test__"]
 }
