@@ -1,7 +1,7 @@
 import * as supertest from 'supertest';
 import { SuperTest, Test } from 'supertest';
 
-import TestServer from './testServer';
+import TestServer from '../testServer';
 import { GenericAuthController } from '../../server/controllers/Generic';
 import { Logger } from '@overnightjs/logger';
 
