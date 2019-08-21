@@ -2,7 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist/server" /* Redirect output structure to the directory. */,
-    "rootDir": "./src/server"
+    "rootDir": "./src/server",
+    "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */,
+    "emitDecoratorMetadata": true
   },
-  "exclude": ["src/app", "src/public"]
+  "exclude": ["src/client", "src/public"]
 }

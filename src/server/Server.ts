@@ -2,7 +2,9 @@ import { Server } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
-import { SlackAuthController } from './controllers/SlackAuth';
+import express from 'express';
+import path from 'path';
+import { SlackAuthController, GenericAuthController } from './controllers';
 
 import { CLIENT_ID, CLIENT_SECRET, PATH_URI, REDIRECT_URI, SCOPE, SLACK_OAUTH_URI } from './utils/config';
 
@@ -14,6 +16,7 @@ export class AppServer extends Server {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(helmet.xssFilter());
+    this.app.use(express.static(path.join(__dirname, '../client')));
     this.setupControllers();
   }
 
@@ -24,7 +27,7 @@ export class AppServer extends Server {
   }
 
   private setupControllers(): void {
-    const exampleController = new SlackAuthController(
+    const slackAuthController = new SlackAuthController(
       PATH_URI as string,
       CLIENT_ID as string,
       SCOPE as string,
@@ -32,6 +35,7 @@ export class AppServer extends Server {
       REDIRECT_URI as string,
       SLACK_OAUTH_URI as string,
     );
-    super.addControllers([exampleController]);
+    const genericController = new GenericAuthController();
+    super.addControllers([slackAuthController, genericController]);
   }
 }

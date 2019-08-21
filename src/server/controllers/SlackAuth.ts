@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import url from 'url';
 import { IResponseBody, IUser } from '../interfaces';
 
-@Controller('auth/slack')
+@Controller('api/auth/slack')
 export class SlackAuthController {
   private REDIRECT_URL: string;
 

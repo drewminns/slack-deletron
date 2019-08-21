@@ -11,7 +11,7 @@ module.exports = {
   mode: PROD,
   output: {
     filename: '[name].[hash].js',
-    path: dist
+    path: dist,
   },
   devtool: PROD ? 'source-map' : 'eval',
   module: {
@@ -21,31 +21,29 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader'
-          }
-        ]
-      }
-    ]
+            loader: 'ts-loader',
+          },
+        ],
+      },
+    ],
   },
   devServer: {
     port: 8081,
     open: true,
     proxy: {
-      '/api': 'http://localhost:3000'
-    }
+      '/api': 'http://localhost:3000',
+    },
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        process.env.NODE_ENV || 'development'
-      )
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     }),
     new HtmlWebpackPlugin({
-      template: './src/public/index.html'
-    })
-  ]
+      template: './src/public/index.html',
+    }),
+  ],
 };

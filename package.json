@@ -11,8 +11,8 @@
     "dev:server": "ts-node-dev --respawn --transpileOnly ./src/server/index.ts",
     "dev:client": "webpack-dev-server --mode development --devtool inline-source-map --hot --open",
     "dev": "run-p dev:server dev:client",
-    "build": "npm-run-all clean lint:server tsc:server build:client",
-    "start": "node dist/server/index.js"
+    "build": "npm-run-all clean lint tsc:server build:client",
+    "start": "npm run build && node dist/server/index.js"
   },
   "keywords": [],
   "author": "",
