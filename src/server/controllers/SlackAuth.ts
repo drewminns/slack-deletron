@@ -1,10 +1,10 @@
 import { Controller, Get } from '@overnightjs/core';
 import { Logger } from '@overnightjs/logger';
-import axios, { AxiosPromise, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
 import url from 'url';
 import { IResponseBody } from '../interfaces';
-import { issueJWT } from '../utils/token';
+import { issueJWT } from '../middleware';
 
 @Controller('api/auth/slack')
 export class SlackAuthController {
@@ -36,16 +36,6 @@ export class SlackAuthController {
         client_secret: this.CLIENT_SECRET,
         code,
         redirect_uri: this.REDIRECT_URI,
-      },
-    });
-  }
-
-  private fetchUserProfile(token: string, user: string): Promise<AxiosPromise> {
-    Logger.Info('Fetching users.info');
-    return axios.get('https://slack.com/api/users.info', {
-      params: {
-        token,
-        user,
       },
     });
   }
