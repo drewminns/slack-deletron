@@ -20,3 +20,4 @@ export const SCOPE = process.env.SCOPE;
 export const PATH_URI = 'https://slack.com/oauth/authorize';
 export const SLACK_OAUTH_URI = 'https://slack.com/api/oauth.access';
 export const PORT = parseInt(process.env.PORT as string, 10);
+export const TOKEN_KEY = process.env.TOKEN_KEY as string;

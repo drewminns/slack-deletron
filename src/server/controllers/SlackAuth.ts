@@ -3,7 +3,8 @@ import { Logger } from '@overnightjs/logger';
 import axios, { AxiosPromise, AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
 import url from 'url';
-import { IResponseBody, IUser } from '../interfaces';
+import { IResponseBody } from '../interfaces';
+import { issueJWT } from '../utils/token';
 
 @Controller('api/auth/slack')
 export class SlackAuthController {
@@ -67,23 +68,15 @@ export class SlackAuthController {
             res.status(401).send({ error: bodyResponse.error });
             return;
           } else {
-            try {
-              const profile: AxiosResponse<IUser> = await this.fetchUserProfile(
-                bodyResponse.access_token,
-                bodyResponse.user_id,
-              );
-              if (!profile.data.ok) {
-                Logger.Warn(
-                  `User profile data returned with an error. METHOD: users.info, Error: ${profile.data.error}`,
-                );
-                res.status(401).send({ error: profile.data.error });
-              }
-
-              res.json({ ...bodyResponse, ...profile.data.user });
-            } catch (err) {
-              Logger.Warn('Fetching data from users.info');
-              res.status(401).send({ error: err });
-            }
+            const token = await issueJWT(bodyResponse.access_token, bodyResponse.user_id);
+            res.redirect(
+              url.format({
+                pathname: '/',
+                query: {
+                  token,
+                },
+              }),
+            );
           }
         },
       );
