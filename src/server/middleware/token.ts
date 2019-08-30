@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { TOKEN_KEY } from '../utils/config';
+import { TOKEN_KEY } from '../config';
 import { IJWT, ICustomRequest } from '../interfaces';
 import { Request, Response, NextFunction } from 'express';
 

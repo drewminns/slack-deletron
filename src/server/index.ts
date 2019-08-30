@@ -1,6 +1,6 @@
 import { AppServer } from './Server';
 
-import { PORT } from './utils/config';
+import { PORT } from './config';
 
 const appServer = new AppServer();
 

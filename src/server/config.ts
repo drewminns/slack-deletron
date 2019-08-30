@@ -5,10 +5,10 @@ dotenv.config();
 let pathURI;
 switch (process.env.NODE_ENV) {
   case 'test':
-    pathURI = path.join(__dirname, '..', '..', '..', '.env.test');
+    pathURI = path.join(__dirname, '..', '..', '.env.test');
     break;
   default:
-    pathURI = path.join(__dirname, '..', '..', '..', '.env.development');
+    pathURI = path.join(__dirname, '..', '..', '.env.development');
 }
 
 dotenv.config({ path: pathURI });

@@ -52,3 +52,13 @@ export interface IUser {
     enterprise_user: {};
   };
 }
+
+export interface IUserProfile {
+  userId: string;
+  name?: string;
+  real_name: string;
+  display_name: string;
+  image: string;
+  is_admin: boolean;
+  is_owner: boolean;
+}

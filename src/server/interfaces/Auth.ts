@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-export interface IResponseBody {
+export interface IAuthBody {
   ok: boolean;
   access_token: string;
   scope: string;

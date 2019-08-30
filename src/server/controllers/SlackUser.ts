@@ -1,48 +1,110 @@
 import { Controller, Get, ClassMiddleware } from '@overnightjs/core';
-import axios from 'axios';
+import { AxiosResponse } from 'axios';
 import { Response, Request } from 'express';
 import { verifyToken } from '../middleware';
-import { ICustomRequest, IUser } from '../interfaces';
+import {
+  ICustomRequest,
+  IUser,
+  IConversationsList,
+  IChannelResponse,
+  IFilteredChannels,
+  IUserProfile,
+} from '../interfaces';
+import { getData } from '../utils';
+import { Logger } from '@overnightjs/logger';
 
 @Controller('api/user')
 @ClassMiddleware([verifyToken])
 export class SlackUserController {
+  // Single Endpoint to
   @Get('profile')
-  private async getUserProfile(request: Request, response: Response) {
+  private async getUserProfile(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      await axios
-        .get('https://slack.com/api/users.info', {
-          params: {
-            token: req.decoded.token,
-            user: req.decoded.userId,
-          },
-        })
-        .then(({ data }: { data: IUser }) => {
-          return response.json(data);
-        });
+      const profile: AxiosResponse<IUser> = await getData('users.info', req.decoded.token, req.decoded.userId);
+
+      if (!profile.data.ok) {
+        res.status(401).send({ error: profile.data.error });
+        return;
+      }
+
+      res.json(profile.data.user);
     } catch (err) {
-      return response.send({ success: false, message: err });
+      Logger.Err('Error Fetching User Profile', err);
+      return res.send({ success: false, message: err });
     }
   }
 
   @Get('channels')
-  private async getChannels(request: Request, response: Response) {
+  private async getChannels(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      await axios
-        .get('https://slack.com/api/conversations.list', {
-          params: {
-            token: req.decoded.token,
-            user: req.decoded.userId,
-          },
-        })
-        .then(res => {
-          return response.json(res.data);
-        });
+      const channels: AxiosResponse<IConversationsList> = await getData(
+        'conversations.list',
+        req.decoded.token,
+        req.decoded.userId,
+      );
+
+      if (!channels.data.ok) {
+        res.status(401).send({ error: channels.data.error });
+        return;
+      }
+
+      res.json(channels.data.channels);
     } catch (err) {
-      console.log(err);
-      return response.send({ success: false, message: err });
+      Logger.Err('Error Fetching User Channels', err);
+      return res.send({ success: false, message: err });
     }
+  }
+
+  @Get('details')
+  private async getUserDetails(request: Request, res: Response) {
+    const req = request as ICustomRequest;
+    const { token, userId } = req.decoded;
+    try {
+      const channelsRequest: AxiosResponse<IConversationsList> = await getData('conversations.list', token, userId);
+      const profileRequest: AxiosResponse<IUser> = await getData('users.info', token, userId);
+
+      Promise.all([channelsRequest, profileRequest]).then(results => {
+        const channelsData: IConversationsList = results[0].data;
+        const profileData = results[1].data;
+        if (!channelsData.ok || !profileData.ok) {
+          res.status(401).send({ success: false, error: 'Error fetching User Details' });
+        }
+        const channels = this.filterChannels(channelsData.channels);
+        const profile = this.cleanProfile(profileData.user);
+        res.send({ profile, channels });
+      });
+    } catch (err) {
+      Logger.Err('Error Fetching User Details', err);
+      return res.send({ success: false, message: err });
+    }
+  }
+
+  private cleanProfile(profile: IUser['user']): IUserProfile {
+    return {
+      userId: profile.id,
+      name: profile.name,
+      real_name: profile.profile.real_name_normalized,
+      display_name: profile.profile.display_name_normalized,
+      image: profile.profile.image_1024,
+      is_admin: profile.is_admin,
+      is_owner: profile.is_owner,
+    };
+  }
+
+  private filterChannels(channels: IChannelResponse[]): IFilteredChannels[] {
+    return channels.map(({ id, name, is_channel, is_group, is_archived, is_private, created, creator }) => {
+      return {
+        id,
+        name,
+        is_channel,
+        is_group,
+        is_archived,
+        is_private,
+        creator,
+        created,
+      };
+    });
   }
 }

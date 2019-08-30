@@ -3,7 +3,7 @@ import { Logger } from '@overnightjs/logger';
 import axios, { AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
 import url from 'url';
-import { IResponseBody } from '../interfaces';
+import { IAuthBody } from '../interfaces';
 import { issueJWT } from '../middleware';
 
 @Controller('api/auth/slack')
@@ -51,7 +51,7 @@ export class SlackAuthController {
     try {
       await axios.get(uri).then(
         async (response: AxiosResponse): Promise<any> => {
-          const bodyResponse = response.data as IResponseBody;
+          const bodyResponse = response.data as IAuthBody;
           if (!bodyResponse.ok) {
             // * To do - add in route to handle error */
             Logger.Warn(`OAuth returned error. Error: ${bodyResponse.error}`);

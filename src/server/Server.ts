@@ -6,7 +6,7 @@ import express from 'express';
 import path from 'path';
 import { SlackAuthController, GenericAuthController, SlackUserController } from './controllers';
 
-import { CLIENT_ID, CLIENT_SECRET, PATH_URI, REDIRECT_URI, SCOPE, SLACK_OAUTH_URI } from './utils/config';
+import { CLIENT_ID, CLIENT_SECRET, PATH_URI, REDIRECT_URI, SCOPE, SLACK_OAUTH_URI } from './config';
 
 export class AppServer extends Server {
   private SERVER_STARTED = 'Example server started on port: ';
