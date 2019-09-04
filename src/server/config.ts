@@ -18,6 +18,6 @@ export const REDIRECT_URI = process.env.REDIRECT_URI;
 export const SCOPE = process.env.SCOPE;
 export const PATH_URI = 'https://slack.com/oauth/authorize';
 export const SLACK_OAUTH_URI = 'https://slack.com/api/oauth.access';
-export const SERVER_PORT = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT as string, 10) : 8080;
+export const SERVER_PORT = parseInt(process.env.PORT as string, 10);
 export const TOKEN_KEY = process.env.TOKEN_KEY as string;
 export const CLIENT_URL = process.env.CLIENT_URL || '/';
