@@ -14,7 +14,7 @@
     "cypress:headless": "run-p dev:test cypress:run",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "dev": "run-p dev:server dev:client",
+    "dev": "NODE_ENV=dev run-p dev:server dev:client",
     "dev:client": "webpack-dev-server --mode development --devtool inline-source-map --hot --open",
     "dev:clienttest": "webpack-dev-server --mode development",
     "dev:server": "ts-node-dev --respawn --transpileOnly ./src/server/index.ts",

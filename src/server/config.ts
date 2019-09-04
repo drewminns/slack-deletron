@@ -3,12 +3,11 @@ import path from 'path';
 
 dotenv.config();
 let pathURI;
-switch (process.env.NODE_ENV) {
-  case 'test':
-    pathURI = path.join(__dirname, '..', '..', '.env.test');
-    break;
-  default:
-    pathURI = path.join(__dirname, '..', '..', '.env.development');
+
+if (process.env.NODE_ENV === 'test') {
+  pathURI = path.join(__dirname, '..', '..', '.env.test');
+} else if (process.env.NODE_ENV === 'dev') {
+  pathURI = path.join(__dirname, '..', '..', '.env.development');
 }
 
 dotenv.config({ path: pathURI });
@@ -19,6 +18,6 @@ export const REDIRECT_URI = process.env.REDIRECT_URI;
 export const SCOPE = process.env.SCOPE;
 export const PATH_URI = 'https://slack.com/oauth/authorize';
 export const SLACK_OAUTH_URI = 'https://slack.com/api/oauth.access';
-export const SERVER_PORT = parseInt(process.env.SERVER_PORT as string, 10);
+export const SERVER_PORT = process.env.SERVER_PORT ? parseInt(process.env.SERVER_PORT as string, 10) : 8080;
 export const TOKEN_KEY = process.env.TOKEN_KEY as string;
 export const CLIENT_URL = process.env.CLIENT_URL || '/';
