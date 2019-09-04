@@ -24,7 +24,7 @@
     "test": "NODE_ENV=test jest",
     "test:coverage": "jest --coverage --colors",
     "tsc:server": "tsc --p tsconfig.server.json",
-    "start": "npm run build && node dist/server/index.js"
+    "start": "node dist/server/index.js"
   },
   "husky": {
     "hooks": {
