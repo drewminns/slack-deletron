@@ -5,6 +5,7 @@ module.exports = {
   },
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
+  testPathIgnorePatterns: ['<rootDir>/node_modules'],
   collectCoverageFrom: ['src/**/*.ts', 'src/**/*.tsx'],
   coveragePathIgnorePatterns: ['node_modules', 'src/__test__', 'src/server/utils', 'cypress'],
 };
