@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import url from 'url';
 import { IAuthBody } from '../interfaces';
 import { issueJWT } from '../middleware';
+import { CLIENT_URL } from '../config';
 
 @Controller('api/auth/slack')
 export class SlackAuthController {
@@ -61,7 +62,7 @@ export class SlackAuthController {
             const token = await issueJWT(bodyResponse.access_token, bodyResponse.user_id);
             res.redirect(
               url.format({
-                pathname: '/',
+                pathname: CLIENT_URL,
                 query: {
                   token,
                 },

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/server/index.js",
+  "engines": {
+    "node": ">=8.14"
+  },
   "scripts": {
     "build": "npm-run-all clean lint tsc:server build:client",
     "build:client": "webpack --mode production",
