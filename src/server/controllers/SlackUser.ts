@@ -21,6 +21,7 @@ export class SlackUserController {
   private async getUserProfile(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
+      // console.log(req.decoded.token);
       const profile: AxiosResponse<IUser> = await getData('users.info', req.decoded.token, req.decoded.userId);
 
       if (!profile.data.ok) {

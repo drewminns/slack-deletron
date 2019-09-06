@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { Hello } from '../../../client/components/Hello';
+import { Login } from '../../../client/Components/Login';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
 describe('components/Hello', () => {
   const MOCK = { compiler: 'TypeScript', framework: 'React' };
-  it('Hello mounts properly', () => {
-    const { container } = render(<Hello compiler={MOCK.compiler} framework={MOCK.framework} />);
+  xit('Hello mounts properly', () => {
+    const { container } = render(<Login />);
     expect(container).toMatchSnapshot();
   });
 
-  it('Hello mounts properly', () => {
-    const { getByTestId } = render(<Hello compiler={MOCK.compiler} framework={MOCK.framework} />);
+  xit('Hello mounts properly', () => {
+    const { getByTestId } = render(<Login />);
     expect(getByTestId('string-data')).toHaveTextContent(`Hello from ${MOCK.compiler} and ${MOCK.framework}!`);
   });
 });
