@@ -1,11 +1,10 @@
 import React from 'react';
-import { UserAuthProvider } from './Hooks/UserAuthProvider';
-import { Login } from './Components/Login';
+import { Auth } from './Components/Auth';
 
-export function App() {
+export const App: React.FC = () => {
   return (
-    <UserAuthProvider>
-      <Login />
-    </UserAuthProvider>
+    <>
+      <Auth />
+    </>
   );
-}
+};

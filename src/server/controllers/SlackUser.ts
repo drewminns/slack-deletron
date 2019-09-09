@@ -10,6 +10,7 @@ import {
   IFilteredChannels,
   IUserProfile,
 } from '../interfaces';
+import { IUserReponse } from '../../shared/interfaces';
 import { getData } from '../utils';
 import { Logger } from '@overnightjs/logger';
 
@@ -21,15 +22,27 @@ export class SlackUserController {
   private async getUserProfile(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      // console.log(req.decoded.token);
       const profile: AxiosResponse<IUser> = await getData('users.info', req.decoded.token, req.decoded.userId);
 
       if (!profile.data.ok) {
         res.status(401).send({ error: profile.data.error });
         return;
       }
-
-      res.json(profile.data.user);
+      const { user } = profile.data;
+      const userResponse: IUserReponse = {
+        id: user.id,
+        real_name: user.real_name,
+        admin: user.is_admin,
+        updated: user.updated,
+        team_id: user.team_id,
+        display_name: user.profile.display_name,
+        avatar_original: user.profile.image_original,
+        avatar_512: user.profile.image_512,
+        avatar_72: user.profile.image_72,
+        first_name: user.profile.first_name,
+        last_name: user.profile.last_name,
+      };
+      res.json(userResponse);
     } catch (err) {
       Logger.Err('Error Fetching User Profile', err);
       return res.send({ success: false, message: err });
