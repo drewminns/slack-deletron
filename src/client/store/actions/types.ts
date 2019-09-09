@@ -5,6 +5,8 @@ import {
   IFetchUserProfileErrorAction,
   ISetUserProfileAction,
 } from './user';
+import { IFetchChannelsAction, IFetchChannelsErrorAction, ISetChannelsAction } from './channels';
+import { IFetchFilesListAction, IFetchFilesListErrorAction, ISetFilesListAction } from './files';
 
 export enum ActionTypes {
   loginUser,
@@ -12,6 +14,12 @@ export enum ActionTypes {
   fetchUserProfile,
   setUserProfile,
   fetchUserProfileError,
+  fetchChannels,
+  fetchChannelsError,
+  setChannels,
+  fetchFilesList,
+  fetchFilesListError,
+  setFilesList,
 }
 
 export type Action =
@@ -19,4 +27,10 @@ export type Action =
   | ILogoutUserAction
   | IFetchUserProfileAction
   | IFetchUserProfileErrorAction
-  | ISetUserProfileAction;
+  | ISetUserProfileAction
+  | IFetchChannelsAction
+  | IFetchChannelsErrorAction
+  | ISetChannelsAction
+  | IFetchFilesListAction
+  | IFetchFilesListErrorAction
+  | ISetFilesListAction;

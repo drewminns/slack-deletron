@@ -29,7 +29,7 @@ const initialUserState: IUserState = {
   fetchProfileError: false,
 };
 
-export const userReducer = (state: IUserState = initialUserState, action: Action) => {
+export const userReducer = (state: IUserState = initialUserState, action: Action): IUserState => {
   switch (action.type) {
     case ActionTypes.loginUser:
       return { ...state, loggedIn: true, token: action.payload };

@@ -12,10 +12,6 @@ interface IAuthProps {
 }
 
 class AuthComponent extends React.Component<IAuthProps> {
-  constructor(props: IAuthProps) {
-    super(props);
-  }
-
   componentDidMount() {
     const URLtoken = new URLSearchParams(location.search).get('token');
     const token = localStorage.getItem('sd-token');
@@ -49,11 +45,14 @@ class AuthComponent extends React.Component<IAuthProps> {
       );
     }
 
-    const { real_name } = this.props.profile;
+    const { real_name, avatar_72 } = this.props.profile;
     return (
       <>
         <button onClick={this._handleLogout}>Log Out</button>
         <p>{real_name}</p>
+        <div>
+          <img src={avatar_72} />
+        </div>
       </>
     );
   }

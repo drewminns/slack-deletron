@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import express from 'express';
 import path from 'path';
-import { SlackAuthController, GenericAuthController, SlackUserController } from './controllers';
+import { SlackAuthController, GenericAuthController, SlackUserController, SlackFileController } from './controllers';
 
 import { CLIENT_ID, CLIENT_SECRET, PATH_URI, REDIRECT_URI, SCOPE, SLACK_OAUTH_URI } from './config';
 
@@ -37,6 +37,7 @@ export class AppServer extends Server {
     );
     const genericController = new GenericAuthController();
     const slackUserController = new SlackUserController();
-    super.addControllers([slackAuthController, genericController, slackUserController]);
+    const slackFileController = new SlackFileController();
+    super.addControllers([slackAuthController, genericController, slackUserController, slackFileController]);
   }
 }

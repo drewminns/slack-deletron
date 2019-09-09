@@ -1,15 +1,7 @@
-import axios from 'axios';
 import { Dispatch } from 'redux';
 import { ActionTypes } from './types';
-import { store } from '../../index';
-import { IInitialState } from '../reducers';
 import { IUserReponse } from '../../../shared/interfaces';
-
-const getRequest = (url: string) => {
-  const storeData = store.getState() as IInitialState;
-  console.log(storeData);
-  return axios.get(url, { headers: { Authorization: 'Bearer ' + storeData.user.token } });
-};
+import { getRequest } from './request';
 
 export interface ILoginUserAction {
   type: ActionTypes.loginUser;
