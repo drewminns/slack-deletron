@@ -3,7 +3,7 @@ import { Logger } from '@overnightjs/logger';
 import axios, { AxiosResponse } from 'axios';
 import { Request, Response } from 'express';
 import url from 'url';
-import { IAuthBody } from '../interfaces';
+import { IAuthBody } from '../../shared/interfaces';
 import { issueJWT } from '../middleware';
 import { CLIENT_URL } from '../config';
 

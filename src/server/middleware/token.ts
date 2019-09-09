@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { TOKEN_KEY } from '../config';
-import { IJWT, ICustomRequest } from '../interfaces';
+import { IJWT, ICustomRequest } from '../../shared/interfaces';
 import { Request, Response, NextFunction } from 'express';
 
 export function issueJWT(token: IJWT['token'], userId: IJWT['userId']) {

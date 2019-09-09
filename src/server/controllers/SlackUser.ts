@@ -9,8 +9,8 @@ import {
   IChannelResponse,
   IFilteredChannels,
   IUserProfile,
-} from '../interfaces';
-import { IUserReponse } from '../../shared/interfaces';
+  IUserReponse,
+} from '../../shared/interfaces';
 import { getData } from '../utils';
 import { Logger } from '@overnightjs/logger';
 
