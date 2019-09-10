@@ -22,7 +22,7 @@ export class SlackUserController {
   private async getUserProfile(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const profile: AxiosResponse<IUser> = await getData('users.info', req.decoded.token, req.decoded.userId);
+      const profile: AxiosResponse<IUser> = await getData('users.info', req.decoded, { user: req.decoded.userId });
 
       if (!profile.data.ok) {
         res.status(401).send({ error: profile.data.error });
@@ -53,11 +53,7 @@ export class SlackUserController {
   private async getChannels(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const channels: AxiosResponse<IConversationsList> = await getData(
-        'conversations.list',
-        req.decoded.token,
-        req.decoded.userId,
-      );
+      const channels: AxiosResponse<IConversationsList> = await getData('conversations.list', req.decoded);
 
       if (!channels.data.ok) {
         res.status(401).send({ error: channels.data.error });
@@ -74,10 +70,11 @@ export class SlackUserController {
   @Get('details')
   private async getUserDetails(request: Request, res: Response) {
     const req = request as ICustomRequest;
-    const { token, userId } = req.decoded;
     try {
-      const channelsRequest: AxiosResponse<IConversationsList> = await getData('conversations.list', token, userId);
-      const profileRequest: AxiosResponse<IUser> = await getData('users.info', token, userId);
+      const channelsRequest: AxiosResponse<IConversationsList> = await getData('conversations.list', req.decoded);
+      const profileRequest: AxiosResponse<IUser> = await getData('users.info', req.decoded, {
+        userid: req.decoded.userId,
+      });
 
       Promise.all([channelsRequest, profileRequest]).then(results => {
         const channelsData: IConversationsList = results[0].data;

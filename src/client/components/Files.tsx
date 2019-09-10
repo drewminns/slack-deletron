@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchFilesList, IInitialState } from '../store';
-import { IFilePayload } from '../../shared/interfaces';
+import { IFileItem } from '../../shared/interfaces';
 
 interface IChannelsProps {
   fetchFilesList: Function;
-  files: IFilePayload[];
+  files: IFileItem[];
   loggedIn: boolean;
 }
 
@@ -18,7 +18,7 @@ class FilesComponent extends React.Component<IChannelsProps> {
     return (
       <>
         <h2>Files Component</h2>
-        <button onClick={() => this.props.fetchFilesList()}>Get Channels</button>
+        <button onClick={() => this.props.fetchFilesList()}>Get Files</button>
         <ul>
           {this.props.files.map((file, i) => {
             return (

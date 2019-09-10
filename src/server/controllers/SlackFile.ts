@@ -8,10 +8,11 @@
 import { Controller, Get, ClassMiddleware } from '@overnightjs/core';
 import { AxiosResponse } from 'axios';
 import { Response, Request } from 'express';
+import { fromUnixTime } from 'date-fns';
 import { verifyToken } from '../middleware';
 import { getData } from '../utils';
 import { Logger } from '@overnightjs/logger';
-import { ICustomRequest, IFileListResponse, IFilePayload } from '../../shared/interfaces';
+import { ICustomRequest, IFileListResponse, IFileItem } from '../../shared/interfaces';
 
 @Controller('api/files')
 @ClassMiddleware([verifyToken])
@@ -20,28 +21,42 @@ export class SlackFileController {
   private async getFilesList(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const files: AxiosResponse<IFileListResponse> = await getData(
-        'files.list',
-        req.decoded.token,
-        req.decoded.userId,
-      );
+      const { from, to, channel, user, types } = req.params;
+      const files: AxiosResponse<IFileListResponse> = await getData('files.list', req.decoded, {
+        limit: 50,
+        ts_from: from,
+        ts_to: to,
+        types,
+        channel,
+        user,
+      });
       if (!files.data.ok) {
         res.status(401).send({ error: files.data.error });
         return;
       }
 
-      const fileResponse: IFilePayload[] = files.data.files.map(file => ({
-        id: file.id,
-        created: file.created,
-        title: file.title,
-        type: file.pretty_type,
-        user: file.user,
-        is_file_owner: file.user === req.decoded.userId,
-        is_public: file.is_public,
-        image: file.thumb_360,
-      }));
+      const fileResponse: IFileItem[] = files.data.files
+        .map(file => ({
+          id: file.id,
+          created: fromUnixTime(file.created),
+          title: file.title,
+          type: file.pretty_type,
+          user: file.user,
+          is_file_owner: file.user === req.decoded.userId,
+          is_public: file.is_public,
+          image: file.thumb_360,
+        }))
+        .sort((a, b) => {
+          return b.created.getTime() - a.created.getTime();
+        });
 
-      return res.send(fileResponse);
+      return res.send({
+        file_list: fileResponse,
+        next_cursor: files.data.response_metadata.next_cursor,
+        channel,
+        user,
+        count: files.data.files.length,
+      });
     } catch (err) {
       Logger.Err('Error Fetching User Profile', err);
       return res.send({ success: false, message: err });

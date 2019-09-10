@@ -13,7 +13,7 @@ export interface IFetchFilesListErrorAction {
 
 export interface ISetFilesListAction {
   type: ActionTypes.setFilesList;
-  payload: IFilePayload[];
+  payload: IFilePayload;
 }
 
 export const fetchFilesList = () => {

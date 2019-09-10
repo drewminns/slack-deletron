@@ -2,12 +2,15 @@ export interface IFileListResponse {
   ok: boolean;
   files: IFileResponse[];
   error?: boolean;
+  response_metadata: {
+    next_cursor?: string | null;
+  };
 }
 
 export interface IFileResponse {
   id: string;
-  created: Date;
-  timestamp: Date;
+  created: number;
+  timestamp: number;
   name: string;
   title: string;
   mimetype: string;
@@ -57,6 +60,14 @@ export interface IFileResponse {
 }
 
 export interface IFilePayload {
+  file_list: IFileItem[];
+  next_cursor: string;
+  channel: string;
+  user: string;
+  count: number;
+}
+
+export interface IFileItem {
   id: string;
   created: Date;
   title: string;

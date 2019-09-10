@@ -13,6 +13,7 @@ export interface IAuthBody {
 export interface IJWT {
   token: string;
   userId: string;
+  iat: number;
 }
 
 export interface ICustomRequest extends Request {
