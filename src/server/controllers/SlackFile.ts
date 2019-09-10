@@ -12,7 +12,14 @@ import { fromUnixTime } from 'date-fns';
 import { verifyToken } from '../middleware';
 import { getData } from '../utils';
 import { Logger } from '@overnightjs/logger';
-import { ICustomRequest, IFileListResponse, IFileItem } from '../../shared/interfaces';
+import {
+  ICustomRequest,
+  IFileListResponse,
+  IFileInfoResponse,
+  IFileItem,
+  IFileDeleteResponse,
+} from '../../shared/interfaces';
+import { file } from '@babel/types';
 
 @Controller('api/files')
 @ClassMiddleware([verifyToken])
@@ -21,7 +28,7 @@ export class SlackFileController {
   private async getFilesList(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const { from, to, channel, user, types } = req.params;
+      const { from, to, channel, user, types } = req.query;
       const files: AxiosResponse<IFileListResponse> = await getData('files.list', req.decoded, {
         limit: 50,
         ts_from: from,
@@ -58,7 +65,55 @@ export class SlackFileController {
         count: files.data.files.length,
       });
     } catch (err) {
-      Logger.Err('Error Fetching User Profile', err);
+      Logger.Err('Error Fetching File List', err);
+      return res.send({ success: false, message: err });
+    }
+  }
+
+  @Get(':file_id')
+  private async getFileInfo(request: Request, res: Response) {
+    const req = request as ICustomRequest;
+
+    try {
+      if (!req.params.file_id) {
+        return res.send({ success: false, message: 'File ID not Provided' });
+      }
+      const file: AxiosResponse<IFileInfoResponse> = await getData('files.info', req.decoded, {
+        file: req.params.file_id,
+      });
+
+      if (!file.data.ok) {
+        res.status(401).send({ error: file.data.error });
+        return;
+      }
+
+      return res.send(file.data);
+    } catch (err) {
+      Logger.Err('Error Fetching File by ID', err);
+      return res.send({ success: false, message: err });
+    }
+  }
+
+  @Get('delete/:file_id')
+  private async deleteFileById(request: Request, res: Response) {
+    const req = request as ICustomRequest;
+
+    try {
+      if (!req.params.file_id) {
+        return res.send({ success: false, message: 'File ID not Provided' });
+      }
+
+      const result: AxiosResponse<IFileDeleteResponse> = await getData('files.delete', req.decoded, {
+        file: req.params.file_id,
+      });
+
+      if (!result.data.ok) {
+        res.status(200).send({ error: 'Error deleting file', file_id: req.params.file_id, success: false });
+      }
+
+      return res.send({ file_id: req.params.file_id, success: true });
+    } catch (err) {
+      Logger.Err('Error deleting File by ID', err);
       return res.send({ success: false, message: err });
     }
   }

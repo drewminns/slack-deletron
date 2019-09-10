@@ -6,7 +6,14 @@ import {
   ISetUserProfileAction,
 } from './user';
 import { IFetchChannelsAction, IFetchChannelsErrorAction, ISetChannelsAction } from './channels';
-import { IFetchFilesListAction, IFetchFilesListErrorAction, ISetFilesListAction } from './files';
+import {
+  IFetchFilesListAction,
+  IFetchFilesListErrorAction,
+  ISetFilesListAction,
+  IDeleteFileByIdAction,
+  IDeleteFileByIdErrorAction,
+  IDeleteFileByIdSuccessAction,
+} from './files';
 
 export enum ActionTypes {
   loginUser,
@@ -20,6 +27,9 @@ export enum ActionTypes {
   fetchFilesList,
   fetchFilesListError,
   setFilesList,
+  deleteFileById,
+  deleteFileByIdSuccess,
+  deleteFileByIdError,
 }
 
 export type Action =
@@ -33,4 +43,7 @@ export type Action =
   | ISetChannelsAction
   | IFetchFilesListAction
   | IFetchFilesListErrorAction
-  | ISetFilesListAction;
+  | ISetFilesListAction
+  | IDeleteFileByIdAction
+  | IDeleteFileByIdErrorAction
+  | IDeleteFileByIdSuccessAction;

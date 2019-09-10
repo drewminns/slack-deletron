@@ -1,10 +1,30 @@
 export interface IFileListResponse {
   ok: boolean;
   files: IFileResponse[];
-  error?: boolean;
+  error?: string;
   response_metadata: {
     next_cursor?: string | null;
   };
+}
+
+export interface IFileDeleteResponse {
+  ok: boolean;
+}
+
+export interface IFileDeletePayload {
+  error?: string;
+  success: boolean;
+  file_id: string;
+}
+
+export interface IFileInfoResponse {
+  ok: boolean;
+  file: IFileResponse;
+  comments: [];
+  response_metadata: {
+    next_cursor?: string | null;
+  };
+  error?: string;
 }
 
 export interface IFileResponse {

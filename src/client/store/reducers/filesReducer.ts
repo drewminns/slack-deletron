@@ -30,9 +30,18 @@ const initialFileState: IFilesState = {
 export const fileReducer = (state: IFilesState = initialFileState, action: Action): IFilesState => {
   switch (action.type) {
     case ActionTypes.fetchFilesList:
-      return { ...initialFileState, fetchingFiles: true };
+      return { ...state, fetchingFiles: true };
     case ActionTypes.fetchChannelsError:
-      return { ...initialFileState, fetchingFiles: false, fetchingFilesError: true };
+      return {
+        ...state,
+        files: [],
+        channel: initialFileState.channel,
+        count: initialFileState.count,
+        user: initialFileState.user,
+        next_cursor: initialFileState.next_cursor,
+        fetchingFiles: false,
+        fetchingFilesError: true,
+      };
     case ActionTypes.setFilesList:
       return {
         ...state,
@@ -43,6 +52,27 @@ export const fileReducer = (state: IFilesState = initialFileState, action: Actio
         user: action.payload.user || '',
         next_cursor: action.payload.next_cursor,
         count: action.payload.count,
+      };
+    case ActionTypes.deleteFileById:
+      return {
+        ...state,
+        deletingFile: true,
+        deletingFileId: action.payload,
+        deletingFileError: false,
+      };
+    case ActionTypes.deleteFileByIdError:
+      return {
+        ...state,
+        deletingFile: false,
+        deletingFileError: true,
+      };
+    case ActionTypes.deleteFileByIdSuccess:
+      const files = state.files.filter(item => item.id !== action.payload.file_id);
+      return {
+        ...state,
+        deletingFile: false,
+        deletingFileError: false,
+        files,
       };
     default:
       return state;

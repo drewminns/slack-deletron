@@ -18,14 +18,12 @@ class AuthComponent extends React.Component<IAuthProps> {
 
     if (URLtoken) {
       this._setTokenFromURL(URLtoken);
-      return;
     } else if (!token) {
-      this.props.logoutUser();
+      this._handleLogout();
       return;
+    } else if (token) {
+      this._setTokenFromURL(token);
     }
-
-    this.props.loginUser(token);
-    this.props.fetchUserProfile(token);
   }
 
   _handleLogout = () => {
@@ -34,6 +32,7 @@ class AuthComponent extends React.Component<IAuthProps> {
 
   _setTokenFromURL = (token: string) => {
     this.props.loginUser(token);
+    this.props.fetchUserProfile(token);
   };
 
   render() {

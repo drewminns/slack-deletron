@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchFilesList, IInitialState } from '../store';
+import { fetchFilesList, deleteFileById, IInitialState } from '../store';
 import { IFileItem } from '../../shared/interfaces';
 
 interface IChannelsProps {
   fetchFilesList: Function;
+  deleteFileById: Function;
   files: IFileItem[];
   loggedIn: boolean;
 }
@@ -27,6 +28,7 @@ class FilesComponent extends React.Component<IChannelsProps> {
                   {file.title} - {file.id}
                 </p>
                 <p>{file.created}</p>
+                <button onClick={() => this.props.deleteFileById(file.id)}>Delete File</button>
                 <div>
                   <img src={file.image} alt={file.title} />
                 </div>
@@ -45,5 +47,5 @@ const mapStateToProps = ({ files: { files }, user: { loggedIn } }: IInitialState
 
 export const Files = connect(
   mapStateToProps,
-  { fetchFilesList },
+  { fetchFilesList, deleteFileById },
 )(FilesComponent);
