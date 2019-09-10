@@ -96,4 +96,5 @@ export interface IFileItem {
   is_file_owner: boolean;
   is_public: boolean;
   image: string;
+  size: number;
 }

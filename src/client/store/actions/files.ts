@@ -16,12 +16,17 @@ export interface ISetFilesListAction {
   payload: IFilePayload;
 }
 
-export const fetchFilesList = () => {
+export const fetchFilesList = (next_cursor?: string) => {
   return async (dispatch: Dispatch) => {
     dispatch<IFetchFilesListAction>({ type: ActionTypes.fetchFilesList });
 
     try {
-      const response = await getRequest('api/files');
+      let response;
+      if (next_cursor) {
+        response = await getRequest('api/files', { next_cursor });
+      } else {
+        response = await getRequest('api/files');
+      }
 
       dispatch<ISetFilesListAction>({
         type: ActionTypes.setFilesList,

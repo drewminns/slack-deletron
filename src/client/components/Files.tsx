@@ -8,6 +8,7 @@ interface IChannelsProps {
   deleteFileById: Function;
   files: IFileItem[];
   loggedIn: boolean;
+  next_cursor: string;
 }
 
 class FilesComponent extends React.Component<IChannelsProps> {
@@ -16,10 +17,21 @@ class FilesComponent extends React.Component<IChannelsProps> {
       return <p>Not Logged In</p>;
     }
 
+    let pagination;
+    if (this.props.files.length && this.props.next_cursor) {
+      pagination = (
+        <>
+          <button onClick={() => this.props.fetchFilesList(this.props.next_cursor)}>Get Next</button>
+        </>
+      );
+    } else {
+      pagination = <button onClick={() => this.props.fetchFilesList()}>Get Files</button>;
+    }
+
     return (
       <>
         <h2>Files Component</h2>
-        <button onClick={() => this.props.fetchFilesList()}>Get Files</button>
+        {pagination}
         <ul>
           {this.props.files.map((file, i) => {
             return (
@@ -41,8 +53,8 @@ class FilesComponent extends React.Component<IChannelsProps> {
   }
 }
 
-const mapStateToProps = ({ files: { files }, user: { loggedIn } }: IInitialState) => {
-  return { files, loggedIn };
+const mapStateToProps = ({ files: { files, next_cursor }, user: { loggedIn } }: IInitialState) => {
+  return { files, loggedIn, next_cursor };
 };
 
 export const Files = connect(
