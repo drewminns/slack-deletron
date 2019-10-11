@@ -2,9 +2,14 @@ export interface IFileListResponse {
   ok: boolean;
   files: IFileResponse[];
   error?: string;
-  response_metadata: {
-    next_cursor?: string | null;
-  };
+  paging?: IPagingResponse;
+}
+
+export interface IPagingResponse {
+  count?: number;
+  total?: number;
+  page?: number;
+  pages?: number;
 }
 
 export interface IFileDeleteResponse {
@@ -81,7 +86,7 @@ export interface IFileResponse {
 
 export interface IFilePayload {
   file_list: IFileItem[];
-  next_cursor: string;
+  paging: IPagingResponse;
   channel: string;
   user: string;
   count: number;
