@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { loginUser, logoutUser, fetchUserProfile, IInitialState } from '../store';
+import { loginUser, logoutUser, fetchUserProfile, IInitialState, fetchChannels } from '../store';
 import { IUserReponse } from '../../shared/interfaces';
 
 interface IAuthProps {
   loginUser: Function;
   logoutUser: Function;
   fetchUserProfile: Function;
+  fetchChannels: Function;
   token: string;
   profile: IUserReponse;
 }
@@ -33,6 +34,7 @@ class AuthComponent extends React.Component<IAuthProps> {
   _setTokenFromURL = (token: string) => {
     this.props.loginUser(token);
     this.props.fetchUserProfile(token);
+    this.props.fetchChannels();
   };
 
   render() {
@@ -63,5 +65,5 @@ const mapStateToProps = ({ user: { token, profile } }: IInitialState) => {
 
 export const Auth = connect(
   mapStateToProps,
-  { loginUser, logoutUser, fetchUserProfile },
+  { loginUser, logoutUser, fetchUserProfile, fetchChannels },
 )(AuthComponent);

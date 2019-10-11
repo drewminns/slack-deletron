@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { fetchFilesList, deleteFileById, IInitialState } from '../store';
 import { IFileItem } from '../../shared/interfaces';
 
-interface IChannelsProps {
+interface IFilesProps {
   fetchFilesList: Function;
   deleteFileById: Function;
   files: IFileItem[];
@@ -11,7 +11,7 @@ interface IChannelsProps {
   next_cursor: string;
 }
 
-class FilesComponent extends React.Component<IChannelsProps> {
+class FilesComponent extends React.Component<IFilesProps> {
   render() {
     if (!this.props.loggedIn) {
       return <p>Not Logged In</p>;

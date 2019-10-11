@@ -1,43 +1,42 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { fetchChannels, IInitialState } from '../store';
 import { IChannelResponse } from '../../shared/interfaces';
 
 interface IChannelsProps {
-  fetchChannels: Function;
   channels: IChannelResponse[];
   loggedIn: boolean;
+  fetchingChannels: boolean;
+  setChannel: Function;
+  currentChannel: IChannelResponse | {};
 }
 
-class ChannelsComponent extends React.Component<IChannelsProps> {
-  render() {
-    if (!this.props.loggedIn) {
-      return <p>Not Logged In</p>;
-    }
-
-    return (
-      <>
-        <h2>Channels Component</h2>
-        <button onClick={() => this.props.fetchChannels()}>Get Channels</button>
-        <ul>
-          {this.props.channels.map((channel, i) => {
-            return (
-              <li key={i}>
-                {channel.name} - {channel.id}
-              </li>
-            );
-          })}
-        </ul>
-      </>
-    );
-  }
-}
-
-const mapStateToProps = ({ channels: { channels }, user: { loggedIn } }: IInitialState) => {
-  return { channels, loggedIn };
+const renderChannelList = (list: IChannelResponse[], setChannel: Function, activeChannel: string) => {
+  return (
+    <>
+      <select value={activeChannel} onChange={e => setChannel(e)}>
+        <option value="">All Files</option>
+        {list.map((channel, i) => {
+          return (
+            <option key={i} value={channel.id}>
+              {channel.name} - Members: {channel.num_members}
+            </option>
+          );
+        })}
+      </select>
+    </>
+  );
 };
 
-export const Channels = connect(
-  mapStateToProps,
-  { fetchChannels },
-)(ChannelsComponent);
+export const Channels: React.SFC<IChannelsProps> = ({
+  loggedIn,
+  fetchingChannels,
+  channels,
+  setChannel,
+  currentChannel,
+}: IChannelsProps) => {
+  if (!loggedIn) {
+    return <p>Not Logged In</p>;
+  }
+
+  const activeChannel = (currentChannel.hasOwnProperty('id') && (currentChannel as IChannelResponse).id) || '';
+  return <>{fetchingChannels ? <p>Loading</p> : renderChannelList(channels, setChannel, activeChannel)}</>;
+};
