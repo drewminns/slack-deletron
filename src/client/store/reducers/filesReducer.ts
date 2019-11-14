@@ -1,12 +1,11 @@
 import { Action, ActionTypes } from '../actions';
-import { IFileItem } from '../../../shared/interfaces';
+import { IFileItem, IPagingResponse } from '../../../shared/interfaces';
 
 export interface IFilesState {
   files: IFileItem[];
   channel: string;
   user: string;
-  next_cursor: string;
-  count: number;
+  paging: IPagingResponse;
   fetchingFiles: boolean;
   fetchingFilesError: boolean;
   deletingFile: boolean;
@@ -18,8 +17,9 @@ const initialFileState: IFilesState = {
   files: [],
   channel: '',
   user: '',
-  next_cursor: '',
-  count: 0,
+  paging: {
+    total: 0,
+  },
   fetchingFiles: false,
   fetchingFilesError: false,
   deletingFile: false,
@@ -36,9 +36,8 @@ export const fileReducer = (state: IFilesState = initialFileState, action: Actio
         ...state,
         files: [],
         channel: initialFileState.channel,
-        count: initialFileState.count,
         user: initialFileState.user,
-        next_cursor: initialFileState.next_cursor,
+        paging: initialFileState.paging,
         fetchingFiles: false,
         fetchingFilesError: true,
       };
@@ -50,8 +49,7 @@ export const fileReducer = (state: IFilesState = initialFileState, action: Actio
         files: action.payload.file_list,
         channel: action.payload.channel || '',
         user: action.payload.user || '',
-        next_cursor: action.payload.next_cursor,
-        count: action.payload.count,
+        paging: action.payload.paging,
       };
     case ActionTypes.deleteFileById:
       return {
@@ -73,6 +71,10 @@ export const fileReducer = (state: IFilesState = initialFileState, action: Actio
         deletingFile: false,
         deletingFileError: false,
         files,
+        paging: {
+          ...state.paging,
+          total: state.paging.total - 1,
+        },
       };
     default:
       return state;

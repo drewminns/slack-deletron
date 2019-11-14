@@ -5,7 +5,12 @@ import {
   IFetchUserProfileErrorAction,
   ISetUserProfileAction,
 } from './user';
-import { IFetchChannelsAction, IFetchChannelsErrorAction, ISetChannelsAction } from './channels';
+import {
+  IFetchChannelsAction,
+  IFetchChannelsErrorAction,
+  ISetChannelsAction,
+  ISetCurrentChannelAction,
+} from './channels';
 import {
   IFetchFilesListAction,
   IFetchFilesListErrorAction,
@@ -16,20 +21,21 @@ import {
 } from './files';
 
 export enum ActionTypes {
-  loginUser,
-  logoutUser,
-  fetchUserProfile,
-  setUserProfile,
-  fetchUserProfileError,
-  fetchChannels,
-  fetchChannelsError,
-  setChannels,
-  fetchFilesList,
-  fetchFilesListError,
-  setFilesList,
-  deleteFileById,
-  deleteFileByIdSuccess,
-  deleteFileByIdError,
+  loginUser = '@@user/LOGIN_USER',
+  logoutUser = '@@user/LOGOUT_USER',
+  fetchUserProfile = '@@user/FETCH_USER_PROFILE',
+  setUserProfile = '@@user/SET_USER_PROFILE',
+  fetchUserProfileError = '@@user/FETCH_USER_PROFILE_ERROR',
+  fetchChannels = '@@channels/FETCH_CHANNELS',
+  fetchChannelsError = '@@channels/FETCH_CHANNELS_ERROR',
+  setChannels = '@@channels/SET_CHANNELS',
+  setCurrentChannelByID = '@@channels/CHANGE_CHANNEL',
+  fetchFilesList = '@@files/FETCH_FILES_LIST',
+  fetchFilesListError = '@@files/FETCH_FILES_LIST_ERROR',
+  setFilesList = '@@files/SET_FILES_LIST',
+  deleteFileById = '@@files/DELETE_FILE_BY_ID',
+  deleteFileByIdSuccess = '@@files/DELETE_FILE_BY_ID_SUCCESS',
+  deleteFileByIdError = '@@files/DELETE_FILE_BY_ID_ERROR',
 }
 
 export type Action =
@@ -41,6 +47,7 @@ export type Action =
   | IFetchChannelsAction
   | IFetchChannelsErrorAction
   | ISetChannelsAction
+  | ISetCurrentChannelAction
   | IFetchFilesListAction
   | IFetchFilesListErrorAction
   | ISetFilesListAction

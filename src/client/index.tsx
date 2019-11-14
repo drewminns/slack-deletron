@@ -7,6 +7,8 @@ import thunk from 'redux-thunk';
 import { reducers } from './store/reducers';
 import { App } from './App';
 
+import './styles.css';
+
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;

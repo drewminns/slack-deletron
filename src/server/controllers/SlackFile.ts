@@ -20,12 +20,12 @@ export class SlackFileController {
   private async getFilesList(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const { from, to, channel, user, types, next_cursor } = req.query;
+      const { from, to, channel, user, types, page } = req.query;
       const files: AxiosResponse<IFileListResponse> = await getData('files.list', req.decoded, {
-        limit: 50,
         ts_from: from,
         ts_to: to,
-        cursor: next_cursor,
+        count: 50,
+        page,
         types,
         channel,
         user,
@@ -53,10 +53,9 @@ export class SlackFileController {
 
       return res.send({
         file_list: fileResponse,
-        next_cursor: files.data.response_metadata.next_cursor,
+        paging: files.data.paging,
         channel,
         user,
-        count: files.data.files.length,
       });
     } catch (err) {
       Logger.Err('Error Fetching File List', err);

@@ -34,3 +34,15 @@ export const fetchChannels = () => {
     }
   };
 };
+
+export interface ISetCurrentChannelAction {
+  type: ActionTypes.setCurrentChannelByID;
+  payload: string;
+}
+
+export const changeChannelID = (channelId: string): ISetCurrentChannelAction => {
+  return {
+    type: ActionTypes.setCurrentChannelByID,
+    payload: channelId,
+  };
+};
