@@ -7,7 +7,7 @@ export interface IFileListResponse {
 
 export interface IPagingResponse {
   count?: number;
-  total?: number;
+  total: number;
   page?: number;
   pages?: number;
 }

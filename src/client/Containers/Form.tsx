@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchFilesList, IInitialState, changeChannelID } from '../store';
-import { Channels } from './Channels';
+import { Channels } from '../Components';
 import { IChannelResponse } from '../../shared/interfaces';
+
+import { Button } from '../Components';
 
 interface IFormProps {
   channels: IChannelResponse[];
@@ -27,7 +29,6 @@ class FormComponent extends React.Component<IFormProps> {
   };
 
   render() {
-    console.log('rendered');
     return (
       <>
         <h1>Form Component</h1>
@@ -38,7 +39,7 @@ class FormComponent extends React.Component<IFormProps> {
           setChannel={this._setChannel}
           currentChannel={this.props.currentChannel}
         />
-        <button onClick={this._fetchFiles}>Get Files</button>
+        <Button handleClick={this._fetchFiles} content="Get Files" />
       </>
     );
   }

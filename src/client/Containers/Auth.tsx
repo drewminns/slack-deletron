@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { loginUser, logoutUser, fetchUserProfile, IInitialState, fetchChannels } from '../store';
 import { IUserReponse } from '../../shared/interfaces';
 
+import { Button } from '../Components/Button';
+
 interface IAuthProps {
   loginUser: Function;
   logoutUser: Function;
@@ -16,7 +18,6 @@ class AuthComponent extends React.Component<IAuthProps> {
   componentDidMount() {
     const URLtoken = new URLSearchParams(location.search).get('token');
     const token = localStorage.getItem('sd-token');
-
     if (URLtoken) {
       this._setTokenFromURL(URLtoken);
     } else if (!token) {
@@ -49,7 +50,7 @@ class AuthComponent extends React.Component<IAuthProps> {
     const { real_name, avatar_72 } = this.props.profile;
     return (
       <>
-        <button onClick={this._handleLogout}>Log Out</button>
+        <Button content="Log Out" handleClick={this._handleLogout} />
         <p>{real_name}</p>
         <div>
           <img src={avatar_72} />

@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { fetchFilesList, deleteFileById, IInitialState } from '../store';
 import { IFileItem, IPagingResponse, IChannelResponse } from '../../shared/interfaces';
 
+import { File } from '../Components/File';
+
 interface IFilesProps {
   fetchFilesList: Function;
   deleteFileById: Function;
@@ -40,22 +42,23 @@ class FilesComponent extends React.Component<IFilesProps> {
           </div>
         ) : null}
 
-        <ul>
+        <section className="clearfix">
           {this.props.files.map((file, i) => {
             return (
-              <li key={i}>
-                <p>
-                  {file.title} - {file.id}
-                </p>
-                <p>{file.created}</p>
-                <button onClick={() => this.props.deleteFileById(file.id)}>Delete File</button>
-                <div>
-                  <img src={file.image} alt={file.title} />
-                </div>
-              </li>
+              <div key={i} className="float-left w-1/4 pb-10">
+                <File
+                  title={file.title}
+                  type={file.type}
+                  size={file.size}
+                  id={file.id}
+                  image={file.image}
+                  created={file.created}
+                  handleDelete={this.props.deleteFileById}
+                />
+              </div>
             );
           })}
-        </ul>
+        </section>
       </>
     );
   }

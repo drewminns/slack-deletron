@@ -12,7 +12,13 @@ interface IChannelsProps {
 const renderChannelList = (list: IChannelResponse[], setChannel: Function, activeChannel: string) => {
   return (
     <>
-      <select value={activeChannel} onChange={e => setChannel(e)}>
+      <label htmlFor="channel-select">Channel</label>
+      <select
+        id="channel-select"
+        value={activeChannel}
+        onChange={e => setChannel(e)}
+        className="appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+      >
         <option value="">All Files</option>
         {list.map((channel, i) => {
           return (
@@ -40,3 +46,5 @@ export const Channels: React.SFC<IChannelsProps> = ({
   const activeChannel = (currentChannel.hasOwnProperty('id') && (currentChannel as IChannelResponse).id) || '';
   return <>{fetchingChannels ? <p>Loading</p> : renderChannelList(channels, setChannel, activeChannel)}</>;
 };
+
+Channels.displayName = 'Channels Select';

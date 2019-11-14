@@ -17,7 +17,9 @@ const initialFileState: IFilesState = {
   files: [],
   channel: '',
   user: '',
-  paging: {},
+  paging: {
+    total: 0,
+  },
   fetchingFiles: false,
   fetchingFilesError: false,
   deletingFile: false,
@@ -69,6 +71,10 @@ export const fileReducer = (state: IFilesState = initialFileState, action: Actio
         deletingFile: false,
         deletingFileError: false,
         files,
+        paging: {
+          ...state.paging,
+          total: state.paging.total - 1,
+        },
       };
     default:
       return state;
