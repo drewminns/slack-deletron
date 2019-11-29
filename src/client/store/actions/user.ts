@@ -9,7 +9,6 @@ export interface ILoginUserAction {
 }
 
 export const loginUser = (token: string): ILoginUserAction => {
-  console.log(token);
   const { protocol, host } = window.location;
   window.history.pushState({}, document.title, protocol + '//' + host);
   localStorage.setItem('sd-token', token);

@@ -10,6 +10,7 @@ import {
   IFilteredChannels,
   IUserProfile,
   IUserReponse,
+  IIMResponse,
 } from '../../shared/interfaces';
 import { getData } from '../utils';
 import { Logger } from '@overnightjs/logger';
@@ -53,14 +54,41 @@ export class SlackUserController {
   private async getChannels(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const channels: AxiosResponse<IConversationsList> = await getData('conversations.list', req.decoded);
+      const channels: AxiosResponse<IConversationsList> = await getData('conversations.list', req.decoded, {
+        types: 'public_channel,private_channel,im, mpim',
+      });
 
       if (!channels.data.ok) {
         res.status(401).send({ error: channels.data.error });
         return;
       }
 
-      res.json(channels.data.channels);
+      const channelsList: IChannelResponse[] = [];
+      const IMList: IIMResponse[] = [];
+      channels.data.channels.forEach((channel: IChannelResponse | IIMResponse) => {
+        if (channel.is_im) {
+          IMList.push(channel as IIMResponse);
+        } else {
+          channelsList.push(channel as IChannelResponse);
+        }
+      });
+
+      const fetchedIMNames = await IMList.map(async (channel: IIMResponse) => {
+        const userInfo: AxiosResponse<IUser> = await getData('users.info', req.decoded, {
+          user: channel.user,
+        });
+
+        if (userInfo.data.ok) {
+          return {
+            ...channel,
+            user_name: userInfo.data.user.real_name,
+          };
+        }
+      });
+
+      Promise.all(fetchedIMNames).then(fetchImResultNames => {
+        res.json({ channels: channelsList, ims: fetchImResultNames });
+      });
     } catch (err) {
       Logger.Err('Error Fetching User Channels', err);
       return res.send({ success: false, message: err });
@@ -71,7 +99,9 @@ export class SlackUserController {
   private async getUserDetails(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const channelsRequest: AxiosResponse<IConversationsList> = await getData('conversations.list', req.decoded);
+      const channelsRequest: AxiosResponse<IConversationsList> = await getData('conversations.list', req.decoded, {
+        types: 'public_channel,private_channel,im, mpim',
+      });
       const profileRequest: AxiosResponse<IUser> = await getData('users.info', req.decoded, {
         userid: req.decoded.userId,
       });
@@ -82,7 +112,7 @@ export class SlackUserController {
         if (!channelsData.ok || !profileData.ok) {
           res.status(401).send({ success: false, error: 'Error fetching User Details' });
         }
-        const channels = this.filterChannels(channelsData.channels);
+        const channels = this.filterChannels(channelsData.channels as IChannelResponse[]);
         const profile = this.cleanProfile(profileData.user);
         res.send({ profile, channels });
       });

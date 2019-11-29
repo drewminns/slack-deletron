@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import { reducers } from './store/reducers';
 import { App } from './App';
 
+import 'typeface-public-sans';
 import './styles.css';
 
 declare global {

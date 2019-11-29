@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { ActionTypes } from './types';
-import { IChannelResponse } from '../../../shared/interfaces';
+import { IChannelFetchResponse } from '../../../shared/interfaces';
 import { getRequest } from './request';
 
 export interface IFetchChannelsAction {
@@ -13,7 +13,7 @@ export interface IFetchChannelsErrorAction {
 
 export interface ISetChannelsAction {
   type: ActionTypes.setChannels;
-  payload: IChannelResponse[];
+  payload: IChannelFetchResponse;
 }
 
 export const fetchChannels = () => {
