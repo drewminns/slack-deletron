@@ -3,7 +3,11 @@ import { IFileItem, IPagingResponse } from '../../../shared/interfaces';
 
 export interface IFilesState {
   files: IFileItem[];
-  channel: string;
+  channel: {
+    id: string;
+    name: string;
+    isChannel: boolean;
+  };
   user: string;
   paging: IPagingResponse;
   fetchingFiles: boolean;
@@ -15,7 +19,11 @@ export interface IFilesState {
 
 const initialFileState: IFilesState = {
   files: [],
-  channel: '',
+  channel: {
+    id: '',
+    name: '',
+    isChannel: true,
+  },
   user: '',
   paging: {
     total: 0,
@@ -30,7 +38,7 @@ const initialFileState: IFilesState = {
 export const fileReducer = (state: IFilesState = initialFileState, action: Action): IFilesState => {
   switch (action.type) {
     case ActionTypes.fetchFilesList:
-      return { ...state, fetchingFiles: true };
+      return { ...state, fetchingFiles: true, channel: action.payload.details };
     case ActionTypes.fetchChannelsError:
       return {
         ...state,
@@ -47,7 +55,6 @@ export const fileReducer = (state: IFilesState = initialFileState, action: Actio
         fetchingFiles: false,
         fetchingFilesError: false,
         files: action.payload.file_list,
-        channel: action.payload.channel || 'ALL_FILES',
         user: action.payload.user || '',
         paging: action.payload.paging,
       };

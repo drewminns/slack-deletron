@@ -5,6 +5,14 @@ import { IFilePayload, IFileDeletePayload } from '../../../shared/interfaces';
 
 export interface IFetchFilesListAction {
   type: ActionTypes.fetchFilesList;
+  payload: {
+    id: string;
+    details: {
+      id: string;
+      name: string;
+      isChannel: boolean;
+    };
+  };
 }
 
 export interface IFetchFilesListErrorAction {
@@ -16,16 +24,34 @@ export interface ISetFilesListAction {
   payload: IFilePayload;
 }
 
-export const fetchFilesList = (channel?: string, next_cursor?: string) => {
+export const fetchFilesList = (
+  channelId: string,
+  channelDetails: { isChannel: boolean; name: string },
+  next_cursor?: string,
+) => {
   return async (dispatch: Dispatch) => {
-    dispatch<IFetchFilesListAction>({ type: ActionTypes.fetchFilesList });
+    dispatch<IFetchFilesListAction>({
+      type: ActionTypes.fetchFilesList,
+      payload: {
+        id: channelId,
+        details: {
+          id: channelId,
+          name: channelDetails.name || 'All Files',
+          isChannel: channelDetails.isChannel || true,
+        },
+      },
+    });
 
     try {
       let response;
       if (next_cursor) {
-        response = await getRequest('api/files', { next_cursor, channel });
+        response = await getRequest('api/files', { next_cursor, channel: channelId });
       } else {
-        response = await getRequest('api/files', { channel });
+        if (channelId) {
+          response = await getRequest('api/files', { channel: channelId });
+        } else {
+          response = await getRequest('api/files');
+        }
       }
 
       dispatch<ISetFilesListAction>({
