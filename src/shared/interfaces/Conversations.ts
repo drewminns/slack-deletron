@@ -22,6 +22,7 @@ export interface IChannelResponse {
   num_members: number;
   topi: IChannelDetails;
   purpose: IChannelDetails;
+  user?: string;
 }
 
 export interface IChannelDetails {
@@ -42,13 +43,30 @@ export interface IIM {
   priority: number;
 }
 
+export interface IIMResponse {
+  id: string;
+  created: number;
+  is_archived: boolean;
+  is_im: boolean;
+  is_org_shared: boolean;
+  user: string;
+  is_user_deleted: boolean;
+  priority: number;
+  user_name?: string;
+}
+
 export interface IConversationsList {
   ok: boolean;
-  channels: IChannelResponse[];
+  channels: IIMResponse[] | IChannelResponse[];
   error?: boolean;
   response_metadata: {
     next_cursor: string;
   };
+}
+
+export interface IChannelFetchResponse {
+  channels: IChannelResponse[];
+  ims: IIMResponse[];
 }
 
 export interface IFilteredChannels {

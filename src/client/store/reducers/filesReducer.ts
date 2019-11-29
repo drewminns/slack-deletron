@@ -47,7 +47,7 @@ export const fileReducer = (state: IFilesState = initialFileState, action: Actio
         fetchingFiles: false,
         fetchingFilesError: false,
         files: action.payload.file_list,
-        channel: action.payload.channel || '',
+        channel: action.payload.channel || 'ALL_FILES',
         user: action.payload.user || '',
         paging: action.payload.paging,
       };

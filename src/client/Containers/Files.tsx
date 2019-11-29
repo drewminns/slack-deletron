@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchFilesList, deleteFileById, IInitialState } from '../store';
-import { IFileItem, IPagingResponse, IChannelResponse } from '../../shared/interfaces';
+import { IFileItem, IPagingResponse, IChannelResponse, IIMResponse } from '../../shared/interfaces';
 
 import { File } from '../Components/File';
 
@@ -9,12 +9,21 @@ interface IFilesProps {
   fetchFilesList: Function;
   deleteFileById: Function;
   files: IFileItem[];
+  channel: string;
   paging: IPagingResponse;
   loggedIn: boolean;
-  currentChannel: IChannelResponse | {};
+  currentChannel: IChannelResponse | IIMResponse | {};
 }
 
 class FilesComponent extends React.Component<IFilesProps> {
+  _renderCurrentChannelDisplay = () => {
+    if ((this.props.currentChannel as IIMResponse).is_im) {
+      return <h2>Private Message with {(this.props.currentChannel as IIMResponse).user_name}</h2>;
+    } else {
+      return <h2>{(this.props.currentChannel as IChannelResponse).name}</h2>;
+    }
+  };
+
   render() {
     if (!this.props.loggedIn) {
       return <p>Not Logged In</p>;
@@ -28,19 +37,22 @@ class FilesComponent extends React.Component<IFilesProps> {
     //     </>
     //   );
     // }
-
     return (
       <>
         <h2>Files Component</h2>
         {pagination}
         {this.props.files.length ? (
           <div>
-            <h2>Results for {(this.props.currentChannel as IChannelResponse).name}</h2>
+            {this._renderCurrentChannelDisplay()}
             <p>
               {this.props.files.length} / Total: {this.props.paging.total}
             </p>
           </div>
-        ) : null}
+        ) : (
+          <div>
+            <p>No Files </p>
+          </div>
+        )}
 
         <section className="clearfix">
           {this.props.files.map((file, i) => {
@@ -65,11 +77,11 @@ class FilesComponent extends React.Component<IFilesProps> {
 }
 
 const mapStateToProps = ({
-  files: { files, paging },
+  files: { files, paging, channel },
   user: { loggedIn },
   channels: { currentChannel },
 }: IInitialState) => {
-  return { files, loggedIn, paging, currentChannel };
+  return { files, channel, loggedIn, paging, currentChannel };
 };
 
 export const Files = connect(

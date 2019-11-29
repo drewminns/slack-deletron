@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchFilesList, IInitialState, changeChannelID } from '../store';
 import { Channels } from '../Components';
-import { IChannelResponse } from '../../shared/interfaces';
+import { IChannelResponse, IIMResponse } from '../../shared/interfaces';
 
 import { Button } from '../Components';
 
 interface IFormProps {
   channels: IChannelResponse[];
+  ims: IIMResponse[];
   loggedIn: boolean;
   fetchingChannels: boolean;
   fetchFilesList: Function;
@@ -34,6 +35,7 @@ class FormComponent extends React.Component<IFormProps> {
         <h1>Form Component</h1>
         <Channels
           channels={this.props.channels}
+          ims={this.props.ims}
           loggedIn={this.props.loggedIn}
           fetchingChannels={this.props.fetchingChannels}
           setChannel={this._setChannel}
@@ -46,10 +48,10 @@ class FormComponent extends React.Component<IFormProps> {
 }
 
 const mapStateToProps = ({
-  channels: { channels, fetchingChannels, currentChannel },
+  channels: { channels, ims, fetchingChannels, currentChannel },
   user: { loggedIn },
 }: IInitialState) => {
-  return { channels, loggedIn, fetchingChannels, currentChannel };
+  return { channels, ims, loggedIn, fetchingChannels, currentChannel };
 };
 
 export const Form = connect(
