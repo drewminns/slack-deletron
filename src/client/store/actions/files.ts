@@ -29,7 +29,9 @@ export const fetchFilesList = (
   channelDetails: { isChannel: boolean; name: string },
   next_cursor?: string,
 ) => {
-  return async (dispatch: Dispatch) => {
+  return async (dispatch: Dispatch, getState: any) => {
+    const { startDate, endDate } = getState().form;
+
     dispatch<IFetchFilesListAction>({
       type: ActionTypes.fetchFilesList,
       payload: {
@@ -41,16 +43,26 @@ export const fetchFilesList = (
         },
       },
     });
-
+    const options = {
+      startDate,
+      endDate,
+    };
     try {
       let response;
       if (next_cursor) {
-        response = await getRequest('api/files', { next_cursor, channel: channelId });
+        response = await getRequest('api/files', {
+          ...options,
+          next_cursor,
+          channel: channelId,
+        });
       } else {
         if (channelId) {
-          response = await getRequest('api/files', { channel: channelId });
+          response = await getRequest('api/files', {
+            ...options,
+            channel: channelId,
+          });
         } else {
-          response = await getRequest('api/files');
+          response = await getRequest('api/files', options);
         }
       }
 

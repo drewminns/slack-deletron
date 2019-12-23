@@ -56,7 +56,7 @@ const renderChannelList = (
   );
 };
 
-export const Channels: React.SFC<IChannelsProps> = ({
+export const Channels: React.FC<IChannelsProps> = ({
   loggedIn,
   fetchingChannels,
   channels,

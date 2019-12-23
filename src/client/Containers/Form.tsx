@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchFilesList, IInitialState, changeChannelID } from '../store';
-import { Channels } from '../Components';
+import { fetchFilesList, IInitialState, changeChannelID, changeDate } from '../store';
+import { Channels, DateSelector } from '../Components';
 import { IChannelResponse, IIMResponse } from '../../shared/interfaces';
 
 import { Button } from '../Components';
@@ -13,12 +13,23 @@ interface IFormProps {
   fetchingChannels: boolean;
   fetchFilesList: Function;
   changeChannelID: Function;
+  changeDate: Function;
+  startDate: string;
+  endDate: string;
   currentChannel: IChannelResponse | IIMResponse | {};
 }
 
 class FormComponent extends React.Component<IFormProps> {
   _setChannel = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.props.changeChannelID(e.target.value);
+  };
+
+  _setStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.changeDate(e.target.value, true);
+  };
+
+  _setEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.props.changeDate(e.target.value);
   };
 
   _fetchFiles = () => {
@@ -43,6 +54,10 @@ class FormComponent extends React.Component<IFormProps> {
   };
 
   render() {
+    if (!this.props.loggedIn) {
+      return <p>Not Logged In</p>;
+    }
+
     return (
       <>
         <h1>Form Component</h1>
@@ -54,6 +69,12 @@ class FormComponent extends React.Component<IFormProps> {
           setChannel={this._setChannel}
           currentChannel={this.props.currentChannel}
         />
+        <DateSelector
+          endDate={this.props.endDate}
+          startDate={this.props.startDate}
+          handleEndDateChange={this._setEndDate}
+          handleStartDateChange={this._setStartDate}
+        />
         <Button handleClick={this._fetchFiles} content="Get Files" />
       </>
     );
@@ -63,11 +84,12 @@ class FormComponent extends React.Component<IFormProps> {
 const mapStateToProps = ({
   channels: { channels, ims, fetchingChannels, currentChannel },
   user: { loggedIn },
+  form: { startDate, endDate },
 }: IInitialState) => {
-  return { channels, ims, loggedIn, fetchingChannels, currentChannel };
+  return { channels, ims, loggedIn, fetchingChannels, currentChannel, endDate, startDate };
 };
 
 export const Form = connect(
   mapStateToProps,
-  { changeChannelID, fetchFilesList },
+  { changeChannelID, fetchFilesList, changeDate },
 )(FormComponent);

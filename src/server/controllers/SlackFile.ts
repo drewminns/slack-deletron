@@ -1,7 +1,7 @@
 import { Controller, Get, ClassMiddleware } from '@overnightjs/core';
 import { AxiosResponse } from 'axios';
 import { Response, Request } from 'express';
-import { fromUnixTime } from 'date-fns';
+import { fromUnixTime, getUnixTime, parse } from 'date-fns';
 import { verifyToken } from '../middleware';
 import { getData } from '../utils';
 import { Logger } from '@overnightjs/logger';
@@ -13,6 +13,10 @@ import {
   IFileDeleteResponse,
 } from '../../shared/interfaces';
 
+function convertDateStringToUnix(date: string): number {
+  return getUnixTime(parse(date, 'yyyy-MM-dd', new Date()));
+}
+
 @Controller('api/files')
 @ClassMiddleware([verifyToken])
 export class SlackFileController {
@@ -20,10 +24,10 @@ export class SlackFileController {
   private async getFilesList(request: Request, res: Response) {
     const req = request as ICustomRequest;
     try {
-      const { from, to, channel, user, types, page } = req.query;
+      const { startDate, endDate, channel, user, types, page } = req.query;
       const files: AxiosResponse<IFileListResponse> = await getData('files.list', req.decoded, {
-        ts_from: from,
-        ts_to: to,
+        ts_to: convertDateStringToUnix(startDate),
+        ts_from: convertDateStringToUnix(endDate),
         count: 50,
         page,
         types,
