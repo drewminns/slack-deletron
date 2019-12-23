@@ -12,6 +12,7 @@ module.exports = {
   output: {
     filename: '[name].[hash].js',
     path: dist,
+    chunkFilename: '[name].bundle.js',
   },
   devtool: PROD ? 'source-map' : 'eval',
   module: {

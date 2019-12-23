@@ -13,7 +13,7 @@ interface IFormProps {
   fetchingChannels: boolean;
   fetchFilesList: Function;
   changeChannelID: Function;
-  currentChannel: IChannelResponse | object;
+  currentChannel: IChannelResponse | IIMResponse | {};
 }
 
 class FormComponent extends React.Component<IFormProps> {
@@ -22,10 +22,23 @@ class FormComponent extends React.Component<IFormProps> {
   };
 
   _fetchFiles = () => {
-    if (this.props.currentChannel.hasOwnProperty('id')) {
-      this.props.fetchFilesList((this.props.currentChannel as IChannelResponse).id);
+    const currentChannel = this.props.currentChannel;
+    if (currentChannel.hasOwnProperty('id')) {
+      if (currentChannel.hasOwnProperty('name')) {
+        const channel = currentChannel as IChannelResponse;
+        this.props.fetchFilesList((currentChannel as IChannelResponse).id, {
+          isChannel: channel.is_channel,
+          name: channel.name,
+        });
+      } else {
+        const channel = currentChannel as IIMResponse;
+        this.props.fetchFilesList((currentChannel as IIMResponse).id, {
+          isChannel: !channel.is_im,
+          name: channel.user_name,
+        });
+      }
     } else {
-      this.props.fetchFilesList();
+      this.props.fetchFilesList('', { isChannel: true, name: 'All Files' });
     }
   };
 

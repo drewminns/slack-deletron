@@ -9,7 +9,11 @@ interface IFilesProps {
   fetchFilesList: Function;
   deleteFileById: Function;
   files: IFileItem[];
-  channel: string;
+  channel: {
+    id: string;
+    name: string;
+    isChannel: boolean;
+  };
   paging: IPagingResponse;
   loggedIn: boolean;
   currentChannel: IChannelResponse | IIMResponse | {};
@@ -17,10 +21,10 @@ interface IFilesProps {
 
 class FilesComponent extends React.Component<IFilesProps> {
   _renderCurrentChannelDisplay = () => {
-    if ((this.props.currentChannel as IIMResponse).is_im) {
-      return <h2>Private Message with {(this.props.currentChannel as IIMResponse).user_name}</h2>;
+    if (!this.props.channel.isChannel) {
+      return <h2>Private Message with {this.props.channel.name}</h2>;
     } else {
-      return <h2>{(this.props.currentChannel as IChannelResponse).name}</h2>;
+      return <h2>{this.props.channel.name}</h2>;
     }
   };
 
