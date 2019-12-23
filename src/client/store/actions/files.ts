@@ -87,7 +87,7 @@ export const deleteFileById = (id: string) => {
     try {
       const response = await getRequestParam('api/files/delete', id);
 
-      if (!response.data.ok) {
+      if (!response.data.success) {
         dispatch<IDeleteFileByIdErrorAction>({
           type: ActionTypes.deleteFileByIdError,
         });
