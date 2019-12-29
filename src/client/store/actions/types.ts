@@ -19,7 +19,7 @@ import {
   IDeleteFileByIdErrorAction,
   IDeleteFileByIdSuccessAction,
 } from './files';
-import { ISetDate } from './form';
+import { ISetDate, IUpdateType } from './form';
 
 export enum ActionTypes {
   loginUser = '@@user ::: LOGIN_USER',
@@ -39,6 +39,7 @@ export enum ActionTypes {
   deleteFileByIdError = '@@files ::: DELETE_FILE_BY_ID_ERROR',
   setStartDate = '@@form ::: SET_START_DATE',
   setEndDate = '@@form ::: SET_END_DATE',
+  updateTypes = '@@form ::: UPDATE_TYPES',
 }
 
 export type Action =
@@ -52,6 +53,7 @@ export type Action =
   | ISetChannelsAction
   | ISetCurrentChannelAction
   | ISetDate
+  | IUpdateType
   | IFetchFilesListAction
   | IFetchFilesListErrorAction
   | ISetFilesListAction

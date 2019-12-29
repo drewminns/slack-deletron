@@ -27,11 +27,12 @@ export interface ISetFilesListAction {
 export const fetchFilesList = (
   channelId: string,
   channelDetails: { isChannel: boolean; name: string },
+  startDate: string,
+  endDate: string,
+  fileTypes: string[],
   next_cursor?: string,
 ) => {
-  return async (dispatch: Dispatch, getState: any) => {
-    const { startDate, endDate } = getState().form;
-
+  return async (dispatch: Dispatch) => {
     dispatch<IFetchFilesListAction>({
       type: ActionTypes.fetchFilesList,
       payload: {
@@ -43,9 +44,11 @@ export const fetchFilesList = (
         },
       },
     });
+
     const options = {
       startDate,
       endDate,
+      types: fileTypes.join(','),
     };
     try {
       let response;

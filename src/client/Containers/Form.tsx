@@ -1,10 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchFilesList, IInitialState, changeChannelID, changeDate } from '../store';
-import { Channels, DateSelector } from '../Components';
+import { fetchFilesList, IInitialState, changeChannelID, changeDate, updateTypes } from '../store';
+import { Channels, DateSelector, Button, FileTypeSelector } from '../Components';
 import { IChannelResponse, IIMResponse } from '../../shared/interfaces';
-
-import { Button } from '../Components';
 
 interface IFormProps {
   channels: IChannelResponse[];
@@ -14,8 +12,10 @@ interface IFormProps {
   fetchFilesList: Function;
   changeChannelID: Function;
   changeDate: Function;
+  updateTypes: Function;
   startDate: string;
   endDate: string;
+  file_types: string[];
   currentChannel: IChannelResponse | IIMResponse | {};
 }
 
@@ -32,25 +32,32 @@ class FormComponent extends React.Component<IFormProps> {
     this.props.changeDate(e.target.value);
   };
 
+  _setFileTypes = (type_value: string): void => {
+    this.props.updateTypes(type_value, this.props.file_types);
+  };
+
   _fetchFiles = () => {
     const currentChannel = this.props.currentChannel;
+    let id = '';
+    let channelConfig = { isChannel: true, name: 'All Files' };
     if (currentChannel.hasOwnProperty('id')) {
       if (currentChannel.hasOwnProperty('name')) {
         const channel = currentChannel as IChannelResponse;
-        this.props.fetchFilesList((currentChannel as IChannelResponse).id, {
+        id = channel.id;
+        channelConfig = {
           isChannel: channel.is_channel,
           name: channel.name,
-        });
+        };
       } else {
         const channel = currentChannel as IIMResponse;
-        this.props.fetchFilesList((currentChannel as IIMResponse).id, {
+        id = channel.id;
+        channelConfig = {
           isChannel: !channel.is_im,
-          name: channel.user_name,
-        });
+          name: channel.user_name || '',
+        };
       }
-    } else {
-      this.props.fetchFilesList('', { isChannel: true, name: 'All Files' });
     }
+    this.props.fetchFilesList(id, channelConfig, this.props.startDate, this.props.endDate, this.props.file_types);
   };
 
   render() {
@@ -69,6 +76,7 @@ class FormComponent extends React.Component<IFormProps> {
           setChannel={this._setChannel}
           currentChannel={this.props.currentChannel}
         />
+        <FileTypeSelector activeTypes={this.props.file_types} updateValue={this._setFileTypes} />
         <DateSelector
           endDate={this.props.endDate}
           startDate={this.props.startDate}
@@ -84,12 +92,12 @@ class FormComponent extends React.Component<IFormProps> {
 const mapStateToProps = ({
   channels: { channels, ims, fetchingChannels, currentChannel },
   user: { loggedIn },
-  form: { startDate, endDate },
+  form: { startDate, endDate, file_types },
 }: IInitialState) => {
-  return { channels, ims, loggedIn, fetchingChannels, currentChannel, endDate, startDate };
+  return { channels, ims, loggedIn, fetchingChannels, currentChannel, endDate, startDate, file_types };
 };
 
 export const Form = connect(
   mapStateToProps,
-  { changeChannelID, fetchFilesList, changeDate },
+  { changeChannelID, fetchFilesList, changeDate, updateTypes },
 )(FormComponent);
