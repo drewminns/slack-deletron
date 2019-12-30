@@ -43,7 +43,6 @@ class FilesComponent extends React.Component<IFilesProps> {
     // }
     return (
       <>
-        <h2>Files Component</h2>
         {pagination}
         {this.props.files.length ? (
           <div>

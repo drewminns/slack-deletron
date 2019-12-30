@@ -1,9 +1,9 @@
 import { Action, ActionTypes } from '../actions';
-import { IUserReponse } from '../../../shared/interfaces';
+import { IUserResponse } from '../../../shared/interfaces';
 
 export interface IUserState {
   loggedIn: boolean;
-  profile: IUserReponse;
+  profile: IUserResponse;
   token: string;
   fetchingProfile: boolean;
   fetchProfileError: boolean;
@@ -12,6 +12,7 @@ export interface IUserState {
 const initialUserState: IUserState = {
   loggedIn: false,
   profile: {
+    success: false,
     id: '',
     real_name: '',
     admin: false,

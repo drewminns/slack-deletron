@@ -9,7 +9,7 @@ import {
   IChannelResponse,
   IFilteredChannels,
   IUserProfile,
-  IUserReponse,
+  IUserResponse,
   IIMResponse,
 } from '../../shared/interfaces';
 import { getData } from '../utils';
@@ -30,7 +30,8 @@ export class SlackUserController {
         return;
       }
       const { user } = profile.data;
-      const userResponse: IUserReponse = {
+      const userResponse: IUserResponse = {
+        success: true,
         id: user.id,
         real_name: user.real_name,
         admin: user.is_admin,

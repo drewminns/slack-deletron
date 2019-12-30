@@ -69,7 +69,11 @@ export const Channels: React.FC<IChannelsProps> = ({
   }
 
   const activeChannel = (currentChannel.hasOwnProperty('id') && (currentChannel as IChannelResponse).id) || '';
-  return <>{fetchingChannels ? <p>Loading</p> : renderChannelList(channels, ims, setChannel, activeChannel)}</>;
+  return (
+    <>
+      {fetchingChannels ? <p>Loading List of Channels</p> : renderChannelList(channels, ims, setChannel, activeChannel)}
+    </>
+  );
 };
 
 Channels.displayName = 'Channels Select';

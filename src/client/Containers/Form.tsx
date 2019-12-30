@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchFilesList, IInitialState, changeChannelID, changeDate, updateTypes } from '../store';
+import { fetchFilesList, fetchChannels, IInitialState, changeChannelID, changeDate, updateTypes } from '../store';
 import { Channels, DateSelector, Button, FileTypeSelector } from '../Components';
 import { IChannelResponse, IIMResponse } from '../../shared/interfaces';
 
@@ -9,6 +9,7 @@ interface IFormProps {
   ims: IIMResponse[];
   loggedIn: boolean;
   fetchingChannels: boolean;
+  fetchChannels: Function;
   fetchFilesList: Function;
   changeChannelID: Function;
   changeDate: Function;
@@ -60,6 +61,12 @@ class FormComponent extends React.Component<IFormProps> {
     this.props.fetchFilesList(id, channelConfig, this.props.startDate, this.props.endDate, this.props.file_types);
   };
 
+  componentDidUpdate(prevProps: { loggedIn: boolean }) {
+    if (prevProps.loggedIn !== this.props.loggedIn) {
+      this.props.fetchChannels();
+    }
+  }
+
   render() {
     if (!this.props.loggedIn) {
       return <p>Not Logged In</p>;
@@ -67,7 +74,6 @@ class FormComponent extends React.Component<IFormProps> {
 
     return (
       <>
-        <h1>Form Component</h1>
         <Channels
           channels={this.props.channels}
           ims={this.props.ims}
@@ -99,5 +105,5 @@ const mapStateToProps = ({
 
 export const Form = connect(
   mapStateToProps,
-  { changeChannelID, fetchFilesList, changeDate, updateTypes },
+  { changeChannelID, fetchFilesList, changeDate, updateTypes, fetchChannels },
 )(FormComponent);

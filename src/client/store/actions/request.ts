@@ -2,6 +2,10 @@ import axios, { AxiosPromise } from 'axios';
 import { store } from '../../index';
 import { IInitialState } from '../reducers';
 
+export const getAuthRequest = (url: string, token: string): Promise<AxiosPromise> => {
+  return axios.get(url, { headers: { Authorization: 'Bearer ' + token } });
+};
+
 export const getRequest = (url: string, query?: {}): Promise<AxiosPromise> => {
   const storeData = store.getState() as IInitialState;
   return axios.get(url, { headers: { Authorization: 'Bearer ' + storeData.user.token }, params: query });

@@ -63,7 +63,8 @@ export interface IUserProfile {
   is_owner: boolean;
 }
 
-export interface IUserReponse {
+export interface IUserResponse {
+  success: boolean;
   id: string;
   real_name?: string;
   admin: boolean;
