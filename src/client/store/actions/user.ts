@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 import { ActionTypes } from './types';
 import { IUserResponse } from '../../../shared/interfaces';
 import { getRequest, getAuthRequest } from './request';
+import { fetchChannels } from './channels';
 
 export interface ILoginUserAction {
   type: ActionTypes.loginUser;

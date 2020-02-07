@@ -6,7 +6,13 @@ export interface IChannelState {
   ims: IIMResponse[];
   fetchingChannels: boolean;
   fetchChannelsError: boolean;
-  currentChannel: {};
+  currentChannel: {
+    id: string;
+    name?: string;
+    user_name?: string;
+    is_im?: boolean;
+    is_channel?: boolean;
+  };
 }
 
 const initialChannelState: IChannelState = {
@@ -14,10 +20,13 @@ const initialChannelState: IChannelState = {
   ims: [],
   fetchingChannels: false,
   fetchChannelsError: false,
-  currentChannel: {},
+  currentChannel: {
+    id: '',
+  },
 };
 
 export const channelReducer = (state: IChannelState = initialChannelState, action: Action): IChannelState => {
+  const { type, payload } = action;
   switch (action.type) {
     case ActionTypes.fetchChannels:
       return { ...state, fetchingChannels: true };
@@ -32,8 +41,8 @@ export const channelReducer = (state: IChannelState = initialChannelState, actio
         ims: action.payload.ims,
       };
     case ActionTypes.setCurrentChannelByID:
-      const channel =
-        state.channels.find(chnl => chnl.id === action.payload) || state.ims.find(im => im.id === action.payload) || {};
+      const channel = state.channels.find(chnl => chnl.id === action.payload) ||
+        state.ims.find(im => im.id === action.payload) || { id: '' };
       return { ...state, currentChannel: channel };
     default:
       return state;

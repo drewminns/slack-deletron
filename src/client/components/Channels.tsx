@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { IChannelResponse, IIMResponse } from '../../shared/interfaces';
+import { IInitialState, fetchChannels, changeChannelID } from '../store';
 
 interface IChannelsProps {
   channels: IChannelResponse[];
@@ -22,12 +24,8 @@ function renderOptGroup(displayGroup: { text: string; id: string }[], title: str
   );
 }
 
-const renderChannelList = (
-  channels: IChannelResponse[],
-  ims: IIMResponse[],
-  setChannel: Function,
-  activeChannel: string,
-) => {
+const renderChannelList = (channels: IChannelResponse[], ims: IIMResponse[], activeChannel: string) => {
+  const dispatch = useDispatch();
   const channelList: { text: string; id: string }[] = channels.map(channel => ({
     id: channel.id,
     text: `${channel.name} - Members: ${channel.num_members}`,
@@ -38,14 +36,18 @@ const renderChannelList = (
     text: `${im.user_name}`,
   }));
 
-  // const displayedResults: { text: string; id: string }[] = [...channelList, ...imList];
+  function handleChannelChange(event: React.ChangeEvent<HTMLSelectElement>): void {
+    const { value } = event.target;
+    dispatch(changeChannelID(value));
+  }
+
   return (
     <>
       <label htmlFor="channel-select">Channel</label>
       <select
         id="channel-select"
         value={activeChannel}
-        onChange={e => setChannel(e)}
+        onChange={handleChannelChange}
         className="appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
       >
         <option value="">All Files</option>
@@ -56,24 +58,25 @@ const renderChannelList = (
   );
 };
 
-export const Channels: React.FC<IChannelsProps> = ({
-  loggedIn,
-  fetchingChannels,
-  channels,
-  ims,
-  setChannel,
-  currentChannel,
-}: IChannelsProps) => {
-  if (!loggedIn) {
-    return <p>Not Logged In</p>;
-  }
-
-  const activeChannel = (currentChannel.hasOwnProperty('id') && (currentChannel as IChannelResponse).id) || '';
-  return (
-    <>
-      {fetchingChannels ? <p>Loading List of Channels</p> : renderChannelList(channels, ims, setChannel, activeChannel)}
-    </>
+export const ChannelSelector: React.FC = () => {
+  const dispatch = useDispatch();
+  const { fetchingChannels, channels, ims, currentChannel } = useSelector(
+    (state: IInitialState) => ({
+      fetchingChannels: state.channels.fetchingChannels,
+      channels: state.channels.channels,
+      ims: state.channels.ims,
+      currentChannel: state.channels.currentChannel,
+    }),
+    shallowEqual,
   );
+  const activeChannel = (currentChannel.hasOwnProperty('id') && (currentChannel as IChannelResponse).id) || '';
+
+  useEffect(() => {
+    if (channels.length === 0 && ims.length === 0) {
+      dispatch(fetchChannels());
+    }
+  }, [channels, ims]);
+  return <div>{fetchingChannels ? <p>Loading</p> : renderChannelList(channels, ims, activeChannel)}</div>;
 };
 
-Channels.displayName = 'Channels Select';
+ChannelSelector.displayName = 'Channel Selector';

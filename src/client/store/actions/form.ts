@@ -5,7 +5,7 @@ export interface ISetDate {
   payload: string;
 }
 
-export const changeDate = (date: string, isStart: false): ISetDate => {
+export const changeDate = (date: string, isStart: boolean): ISetDate => {
   return {
     type: isStart ? ActionTypes.setStartDate : ActionTypes.setEndDate,
     payload: date,
@@ -18,9 +18,9 @@ export interface IUpdateType {
 }
 
 export const updateTypes = (value: string, currentList: string[]): IUpdateType => {
-  const updatedList = [...currentList];
+  let updatedList = [...currentList];
   if (updatedList.includes(value)) {
-    updatedList.splice(currentList.indexOf(value));
+    updatedList = updatedList.filter(val => val !== value);
   } else {
     updatedList.push(value);
   }
