@@ -26,7 +26,6 @@ const initialChannelState: IChannelState = {
 };
 
 export const channelReducer = (state: IChannelState = initialChannelState, action: Action): IChannelState => {
-  const { type, payload } = action;
   switch (action.type) {
     case ActionTypes.fetchChannels:
       return { ...state, fetchingChannels: true };
